@@ -3,10 +3,10 @@ spring:
       oauth2:
         resourceserver:
           jwt:
-            issuer-uri: http://localhost:8080/realms/myrealm
+            issuer-uri: http://keycloak:8080/realms/myrealm
 
   datasource:
-      url: jdbc:mysql://localhost:3306/my-app-data?serverTimezone=UTC
+      url: jdbc:mysql://mysql:3306/my-app-test?serverTimezone=UTC
       username: root
       password: P4ssword!
       dbcp2:
@@ -15,7 +15,7 @@ spring:
         validation-query-timeout: 30
   jpa:
       hibernate:
-        ddl-auto: update
+        ddl-auto: create
       open-in-view: false
       properties:
         hibernate:
