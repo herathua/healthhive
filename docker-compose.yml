@@ -1,44 +1,8 @@
-version: '3.8'
-
 services:
   mysql:
-    container_name: mysql
-    image: mysql:8.2
+    image: mysql:8.3
     environment:
-      - MYSQL_DATABASE=my-app-test
-      - MYSQL_ROOT_PASSWORD=P4ssword!
+    - MYSQL_DATABASE=Health-Hivw
+    - MYSQL_ROOT_PASSWORD=P4ssword!
     ports:
-      - 3306:3306
-    networks:
-      - mynetwork2
-      - external_network
-
-  keycloak:
-    container_name: keycloak
-    image: quay.io/keycloak/keycloak:22.0.1
-    command:
-      - "start-dev"
-    ports:
-      - "8180:8080"
-    networks:
-      - mynetwork2
-      - external_network
-
-  my-app-test:
-    build:
-      dockerfile: Dockerfile
-    image: my-app-test:latest
-    ports:
-      - 21001-21010:21001
-    depends_on:
-      - mysql
-      - keycloak
-    networks:
-      - mynetwork2
-      - external_network
-
-networks:
-  mynetwork2:
-    driver: bridge
-  external_network:
-    external: true
+    - 3307:3306
