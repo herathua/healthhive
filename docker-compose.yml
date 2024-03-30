@@ -2,7 +2,7 @@ services:
   mysql:
     image: mysql:8.3
     environment:
-    - MYSQL_DATABASE=Health-Hivw
-    - MYSQL_ROOT_PASSWORD=P4ssword!
+    - MYSQL_DATABASE=Health-Hive
+    - MYSQL_ROOT_PASSWORD=Password
     ports:
     - 3307:3306
