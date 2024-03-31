@@ -1,11 +1,11 @@
 package io.bootify.health_hive.service;
 
-import io.bootify.health_hive.domain.DataUploadReqeust;
+import io.bootify.health_hive.domain.DataUploadRequest;
 import io.bootify.health_hive.domain.LabReportShare;
 import io.bootify.health_hive.domain.LabRequest;
 import io.bootify.health_hive.domain.User;
 import io.bootify.health_hive.model.UserDTO;
-import io.bootify.health_hive.repos.DataUploadReqeustRepository;
+import io.bootify.health_hive.repos.DataUploadRequestRepository;
 import io.bootify.health_hive.repos.LabReportShareRepository;
 import io.bootify.health_hive.repos.LabRequestRepository;
 import io.bootify.health_hive.repos.UserRepository;
@@ -22,16 +22,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final LabRequestRepository labRequestRepository;
-    private final DataUploadReqeustRepository dataUploadReqeustRepository;
+    private final DataUploadRequestRepository dataUploadRequestRepository;
     private final LabReportShareRepository labReportShareRepository;
 
     public UserService(final UserRepository userRepository,
             final LabRequestRepository labRequestRepository,
-            final DataUploadReqeustRepository dataUploadReqeustRepository,
+            final DataUploadRequestRepository dataUploadRequestRepository,
             final LabReportShareRepository labReportShareRepository ,KeycloackService keycloackService) {
         this.userRepository = userRepository;
         this.labRequestRepository = labRequestRepository;
-        this.dataUploadReqeustRepository = dataUploadReqeustRepository;
+        this.dataUploadRequestRepository = dataUploadRequestRepository;
         this.labReportShareRepository = labReportShareRepository;
         this.keycloackService = keycloackService;
     }
@@ -108,10 +108,10 @@ public class UserService {
             referencedWarning.addParam(userLabRequest.getId());
             return referencedWarning;
         }
-        final DataUploadReqeust userDataUploadReqeust = dataUploadReqeustRepository.findFirstByUser(user);
-        if (userDataUploadReqeust != null) {
+        final DataUploadRequest userDataUploadRequest = dataUploadRequestRepository.findFirstByUser(user);
+        if (userDataUploadRequest != null) {
             referencedWarning.setKey("user.dataUploadReqeust.user.referenced");
-            referencedWarning.addParam(userDataUploadReqeust.getId());
+            referencedWarning.addParam(userDataUploadRequest.getId());
             return referencedWarning;
         }
         final LabReportShare patientLabReportShare = labReportShareRepository.findFirstByPatient(user);

@@ -45,8 +45,8 @@ public class File {
     private LabDataUpload labDataUpload;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "data_upload_reqeust_id")
-    private DataUploadReqeust dataUploadReqeust;
+    @JoinColumn(name = "data_upload_request_id")
+    private DataUploadRequest dataUploadRequest;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -96,12 +96,12 @@ public class File {
         this.labDataUpload = labDataUpload;
     }
 
-    public DataUploadReqeust getDataUploadReqeust() {
-        return dataUploadReqeust;
+    public DataUploadRequest getDataUploadRequest() {
+        return dataUploadRequest;
     }
 
-    public void setDataUploadReqeust(final DataUploadReqeust dataUploadReqeust) {
-        this.dataUploadReqeust = dataUploadReqeust;
+    public void setDataUploadRequest(final DataUploadRequest dataUploadRequest) {
+        this.dataUploadRequest = dataUploadRequest;
     }
 
     public OffsetDateTime getDateCreated() {

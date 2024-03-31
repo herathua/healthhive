@@ -19,16 +19,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
-@Table(name = "DataUploadReqeusts")
+@Table(name = "DataUploadRequests")
 @EntityListeners(AuditingEntityListener.class)
-public class DataUploadReqeust {
+public class DataUploadRequest {
 
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "dataUploadReqeust")
+    @OneToMany(mappedBy = "dataUploadRequest")
     private Set<File> files;
 
     @ManyToOne(fetch = FetchType.LAZY)
