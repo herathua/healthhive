@@ -11,5 +11,5 @@ public interface LabDataUploadRepository extends JpaRepository<LabDataUpload, Lo
 
     LabDataUpload findFirstByLabRequest(LabRequest labRequest);
 
-    List<LabDataUpload> findByLabRequestID(Long labRequestID);
+    List<LabDataUpload> findByLabRequestId(Long labRequestId);
 }

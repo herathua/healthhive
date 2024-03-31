@@ -23,16 +23,15 @@ public class LabRequestService {
     private final UserRepository userRepository;
     private final LabRepository labRepository;
     private final LabDataUploadRepository labDataUploadRepository;
-    private final KeycloackService keycloackService;
+
 
     public LabRequestService(final LabRequestRepository labRequestRepository,
             final UserRepository userRepository, final LabRepository labRepository,
-            final LabDataUploadRepository labDataUploadRepository, KeycloackService keycloackService) {
+            final LabDataUploadRepository labDataUploadRepository) {
         this.labRequestRepository = labRequestRepository;
         this.userRepository = userRepository;
         this.labRepository = labRepository;
         this.labDataUploadRepository = labDataUploadRepository;
-        this.keycloackService = keycloackService;
     }
 
     public List<LabRequestDTO> findAll() {
@@ -51,7 +50,6 @@ public class LabRequestService {
     public Long create(final LabRequestDTO labRequestDTO) {
         final LabRequest labRequest = new LabRequest();
         mapToEntity(labRequestDTO, labRequest);
-        keycloackService.createLabInKeycloak(labRequestDTO);
         return labRequestRepository.save(labRequest).getId();
     }
 
@@ -59,19 +57,15 @@ public class LabRequestService {
         final LabRequest labRequest = labRequestRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(labRequestDTO, labRequest);
-        keycloackService.updateLabInKeycloak(labRequestDTO);
         labRequestRepository.save(labRequest);
     }
 
     public void delete(final Long id) {
         labRequestRepository.deleteById(id);
-        keycloackService.deleteLabInKeycloak(get(id));
+
     }
 
-    public void resetPassword(final Long id, final String tempPassword) {
-        final LabRequestDTO labRequestDTO = get(id);
-        keycloackService.resetLabPassword(labRequestDTO, tempPassword);
-    }
+
 
     private LabRequestDTO mapToDTO(final LabRequest labRequest, final LabRequestDTO labRequestDTO) {
         labRequestDTO.setId(labRequest.getId());

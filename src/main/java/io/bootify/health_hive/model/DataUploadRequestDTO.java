@@ -1,7 +1,7 @@
 package io.bootify.health_hive.model;
 
 
-public class DataUploadReqeustDTO {
+public class DataUploadRequestDTO {
 
     private Long id;
     private Long user;
