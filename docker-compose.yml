@@ -1,8 +1,39 @@
 services:
-  mysql:
-    image: mysql:8.3
+  mysql-hh:
+    container_name: mysql-hh
+    image: mysql
     environment:
     - MYSQL_DATABASE=Health-Hive
     - MYSQL_ROOT_PASSWORD=Password
     ports:
     - 3307:3306
+
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
+      - mysql_data:/var/lib/mysql
+
+  keycloak-hh:
+    container_name: keycloak-hh
+    image: quay.io/keycloak/keycloak:22.0.1
+    command:
+      - "start-dev"
+      - "--hostname-port=8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: keycloak-hh
+      KC_DB: mysql
+      KC_DB_URL_HOST: mysql-hh
+      KC_DB_URL_DATABASE: Health-Hive
+      KC_DB_USERNAME: root
+      KC_DB_PASSWORD: Password
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-hh
+
+volumes:
+    mysql_data:
+

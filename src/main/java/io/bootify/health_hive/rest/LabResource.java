@@ -1,7 +1,12 @@
 package io.bootify.health_hive.rest;
 
+import io.bootify.health_hive.domain.Lab;
 import io.bootify.health_hive.model.LabDTO;
+import io.bootify.health_hive.model.LabLoginDTO;
+import io.bootify.health_hive.repos.LabRepository;
+import io.bootify.health_hive.service.KeycloackService;
 import io.bootify.health_hive.service.LabService;
+import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,14 +15,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -25,9 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class LabResource {
 
     private final LabService labService;
+    private final KeycloackService  keycloakService;
+    private final LabRepository labRepository;
 
-    public LabResource(final LabService labService) {
+    public LabResource(final LabService labService, final KeycloackService keycloakService,final LabRepository labRepository){
         this.labService = labService;
+        this.keycloakService = keycloakService;
+        this.labRepository = labRepository;
     }
 
     @GetMapping
@@ -45,6 +47,18 @@ public class LabResource {
     public ResponseEntity<Long> createLab(@RequestBody @Valid final LabDTO labDTO) {
         final Long createdId = labService.create(labDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?>  login (@RequestBody LabLoginDTO labLoginDTO) {
+
+        return null;
+    }
+
+
+    @PutMapping("/labs/{id}/reset-password")
+    public void resetLabPassword(@PathVariable Long id, @RequestParam String tempPassword) {
+        labService.resetLabPassword(id, tempPassword);
     }
 
     @PutMapping("/{id}")

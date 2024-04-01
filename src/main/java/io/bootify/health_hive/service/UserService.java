@@ -13,6 +13,7 @@ import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -70,9 +71,10 @@ public class UserService {
         keycloackService.deleteUserInKeycloak(get(id));
     }
 
-    public void resetPassword(final Long id, final String tempPassword) {
+    public ResponseEntity<Void> resetPassword(final Long id, final String tempPassword) {
         final UserDTO userDTO = get(id);
-        keycloackService.resetPassword(userDTO, tempPassword);
+        keycloackService.resetUserPassword(userDTO, tempPassword);
+        return ResponseEntity.ok().build();
     }
 
     private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
