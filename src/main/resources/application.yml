@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/Health-Hive?serverTimezone=UTC}
     username: ${JDBC_DATABASE_USERNAME:root}
-    password: ${JDBC_DATABASE_PASSWORD:Password1}
+    password: ${JDBC_DATABASE_PASSWORD:Password}
     dbcp2:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
@@ -36,4 +36,5 @@ error:
       LabReportShareDoctorUnique: LAB_REPORT_SHARE_DOCTOR_UNIQUE
 springdoc:
   pathsToMatch: /api/**
-
+server:
+  port: 33000

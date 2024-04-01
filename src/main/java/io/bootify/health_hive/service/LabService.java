@@ -18,11 +18,13 @@ public class LabService {
 
     private final LabRepository labRepository;
     private final LabRequestRepository labRequestRepository;
+    private final KeycloackService keycloackService;
 
     public LabService(final LabRepository labRepository,
-                      final LabRequestRepository labRequestRepository) {
+                      final LabRequestRepository labRequestRepository,final KeycloackService keycloackService) {
         this.labRepository = labRepository;
         this.labRequestRepository = labRequestRepository;
+        this.keycloackService = keycloackService;
     }
 
     public List<LabDTO> findAll() {
@@ -41,18 +43,29 @@ public class LabService {
     public Long create(final LabDTO labDTO) {
         final Lab lab = new Lab();
         mapToEntity(labDTO, lab);
+        keycloackService.createLabInKeycloak(labDTO);
+
         return labRepository.save(lab).getId();
     }
 
-    public void update(final Long id, final LabDTO labDTO) {
+    public String update(final Long id, final LabDTO labDTO) {
         final Lab lab = labRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(labDTO, lab);
+        KeycloackService.updateLabInKeycloak(labDTO);
         labRepository.save(lab);
+        return ("Lab updated successfully");
     }
 
     public void delete(final Long id) {
         labRepository.deleteById(id);
+        keycloackService.deleteLabInKeycloak(get(id));
+
+    }
+    public void resetLabPassword(final Long id, final String tempPassword) {
+        final Lab lab = labRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        keycloackService.resetLabPassword(id,tempPassword);
     }
 
     private LabDTO mapToDTO(final Lab lab, final LabDTO labDTO) {
