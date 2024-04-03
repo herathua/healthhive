@@ -76,42 +76,6 @@ services:
     ports:
       - "3001:3000"
 
-  ipfs_node_1:
-    image: ipfs/go-ipfs:v0.12.2
-    container_name: ipfs_node_1
-    ports:
-      - "38080:38080"
-      - "34001:34001"
-    volumes:
-
-      - ./docker/ipfs/ipfs_staging_1:/export
-      - ./docker/ipfs/ipfs_data_1:/data/ipfs
-#      - ipfs_staging:/export
-#      - ipfs_data:/data/ipfs
-
-  ipfs_node_2:
-    image: ipfs/go-ipfs:v0.12.2
-    container_name: ipfs_node_2
-    ports:
-      - "38081:38080"
-      - "34002:34001"
-    volumes:
-      - ./docker/ipfs/ipfs_staging_2:/export
-      - ./docker/ipfs/ipfs_data_2:/data/ipfs
-
-  ipfs_cluster:
-    image: ipfs/ipfs-cluster:latest
-    container_name: ipfs_cluster
-    depends_on:
-        - ipfs_node_1
-        - ipfs_node_2
-    environment:
-      CLUSTER_SECRET: "af5bb078b010635db910f9ef8d117d22a41a714f8119491a1a2316e275721880"
-      IPFS_API: "/dns4/ipfs_node/tcp/5001"
-    ports:
-      - "9094:9094"
-    volumes:
-      - ./docker/ipfs/ipfs_cluster_data:/data/ipfs-cluster
 
 volumes:
 
