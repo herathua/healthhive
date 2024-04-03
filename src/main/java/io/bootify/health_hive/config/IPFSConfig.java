@@ -1,4 +1,5 @@
-package io.bootify.health_hivw.config;
+package io.bootify.health_hive.config;
+
 
 import io.ipfs.api.IPFS;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,7 +13,8 @@ public class IPFSConfig {
     public IPFS ipfs;
 
     public IPFSConfig() {
-        ipfs = new IPFS("/ip4/172.19.0.3/tcp/5001");
+        ipfs = new IPFS("/ip4/127.0.0.1/tcp/5001");
     }
 
 }
+
