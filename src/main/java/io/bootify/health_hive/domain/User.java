@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,6 +30,12 @@ public class User {
     @Column(nullable = false)
     private String fullName;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String telephoneNumber;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -36,11 +43,20 @@ public class User {
     @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(nullable = false)
+    private LocalDate dateOfBirth;
 
-    @Column
-    private String telephoneNumber;
+    @Column(length = 5)
+    private String birthCertificateNumber;
+
+    @Column(nullable = false, unique = true, length = 12)
+    private String nic;
+
+    @Column(length = 60)
+    private String emergencyContactName;
+
+    @Column(length = 10)
+    private String emergencyContactNumber;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -66,6 +82,22 @@ public class User {
         this.fullName = fullName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(final String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -82,20 +114,44 @@ public class User {
         this.age = age;
     }
 
-    public String getEmail() {
-        return email;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    public void setDateOfBirth(final LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public String getTelephoneNumber() {
-        return telephoneNumber;
+    public String getBirthCertificateNumber() {
+        return birthCertificateNumber;
     }
 
-    public void setTelephoneNumber(final String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
+    public void setBirthCertificateNumber(final String birthCertificateNumber) {
+        this.birthCertificateNumber = birthCertificateNumber;
+    }
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(final String nic) {
+        this.nic = nic;
+    }
+
+    public String getEmergencyContactName() {
+        return emergencyContactName;
+    }
+
+    public void setEmergencyContactName(final String emergencyContactName) {
+        this.emergencyContactName = emergencyContactName;
+    }
+
+    public String getEmergencyContactNumber() {
+        return emergencyContactNumber;
+    }
+
+    public void setEmergencyContactNumber(final String emergencyContactNumber) {
+        this.emergencyContactNumber = emergencyContactNumber;
     }
 
     public OffsetDateTime getDateCreated() {

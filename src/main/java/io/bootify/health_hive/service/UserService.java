@@ -15,24 +15,26 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import io.bootify.health_hive.service.KeycloackService;
 
 
 @Service
 public class UserService {
-    private final KeycloackService keycloackService;
 
     private final UserRepository userRepository;
     private final LabRequestRepository labRequestRepository;
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final LabReportShareRepository labReportShareRepository;
+    private final KeycloackService keycloackService;
 
     public UserService(final UserRepository userRepository,
-            final LabRequestRepository labRequestRepository,
-            final DataUploadRequestRepository dataUploadRequestRepository,
-            final LabReportShareRepository labReportShareRepository ,KeycloackService keycloackService) {
+                       final LabRequestRepository labRequestRepository,
+                       final DataUploadRequestRepository dataUploadReqeustRepository,
+                       final LabReportShareRepository labReportShareRepository,
+                       final KeycloackService keycloackService) {
         this.userRepository = userRepository;
         this.labRequestRepository = labRequestRepository;
-        this.dataUploadRequestRepository = dataUploadRequestRepository;
+        this.dataUploadRequestRepository = dataUploadReqeustRepository;
         this.labReportShareRepository = labReportShareRepository;
         this.keycloackService = keycloackService;
     }
@@ -53,22 +55,20 @@ public class UserService {
     public Long create(final UserDTO userDTO) {
         final User user = new User();
         mapToEntity(userDTO, user);
-        keycloackService.createUserInKeycloak(userDTO);
+         String msg = keycloackService.createUserInKeycloak(userDTO);
+        System.out.println("\n\nkeycloak message: " + msg + "\n\n");
         return userRepository.save(user).getId();
-
     }
 
     public void update(final Long id, final UserDTO userDTO) {
         final User user = userRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(userDTO, user);
-        keycloackService.updateUserInKeycloak(userDTO);
         userRepository.save(user);
     }
 
     public void delete(final Long id) {
         userRepository.deleteById(id);
-        keycloackService.deleteUserInKeycloak(get(id));
     }
 
     public ResponseEntity<Void> resetPassword(final Long id, final String tempPassword) {
@@ -80,24 +80,38 @@ public class UserService {
     private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
         userDTO.setId(user.getId());
         userDTO.setFullName(user.getFullName());
-        userDTO.setGender(user.getGender());
-        userDTO.setAge(user.getAge());
         userDTO.setEmail(user.getEmail());
         userDTO.setTelephoneNumber(user.getTelephoneNumber());
+        userDTO.setGender(user.getGender());
+        userDTO.setAge(user.getAge());
+        userDTO.setDateOfBirth(user.getDateOfBirth());
+        userDTO.setBirthCertificateNumber(user.getBirthCertificateNumber());
+        userDTO.setNic(user.getNic());
+        userDTO.setEmergencyContactName(user.getEmergencyContactName());
+        userDTO.setEmergencyContactNumber(user.getEmergencyContactNumber());
         return userDTO;
     }
 
     private User mapToEntity(final UserDTO userDTO, final User user) {
         user.setFullName(userDTO.getFullName());
-        user.setGender(userDTO.getGender());
-        user.setAge(userDTO.getAge());
         user.setEmail(userDTO.getEmail());
         user.setTelephoneNumber(userDTO.getTelephoneNumber());
+        user.setGender(userDTO.getGender());
+        user.setAge(userDTO.getAge());
+        user.setDateOfBirth(userDTO.getDateOfBirth());
+        user.setBirthCertificateNumber(userDTO.getBirthCertificateNumber());
+        user.setNic(userDTO.getNic());
+        user.setEmergencyContactName(userDTO.getEmergencyContactName());
+        user.setEmergencyContactNumber(userDTO.getEmergencyContactNumber());
         return user;
     }
 
     public boolean emailExists(final String email) {
         return userRepository.existsByEmailIgnoreCase(email);
+    }
+
+    public boolean nicExists(final String nic) {
+        return userRepository.existsByNicIgnoreCase(nic);
     }
 
     public ReferencedWarning getReferencedWarning(final Long id) {
@@ -110,10 +124,10 @@ public class UserService {
             referencedWarning.addParam(userLabRequest.getId());
             return referencedWarning;
         }
-        final DataUploadRequest userDataUploadRequest = dataUploadRequestRepository.findFirstByUser(user);
-        if (userDataUploadRequest != null) {
+        final DataUploadRequest userDataUploadReqeust = dataUploadRequestRepository.findFirstByUser(user);
+        if (userDataUploadReqeust != null) {
             referencedWarning.setKey("user.dataUploadReqeust.user.referenced");
-            referencedWarning.addParam(userDataUploadRequest.getId());
+            referencedWarning.addParam(userDataUploadReqeust.getId());
             return referencedWarning;
         }
         final LabReportShare patientLabReportShare = labReportShareRepository.findFirstByPatient(user);

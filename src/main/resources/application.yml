@@ -34,7 +34,9 @@ error:
       LabRequestLabUnique: LAB_REQUEST_LAB_UNIQUE
       LabReportSharePatientUnique: LAB_REPORT_SHARE_PATIENT_UNIQUE
       LabReportShareDoctorUnique: LAB_REPORT_SHARE_DOCTOR_UNIQUE
+
 springdoc:
   pathsToMatch: /api/**
+
 server:
   port: 33000

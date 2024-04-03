@@ -24,7 +24,7 @@ services:
       KC_HOSTNAME: keycloak-hh
       KC_DB: mysql
       KC_DB_URL_HOST: mysql-hh
-      KC_DB_URL_DATABASE: Health-Hive
+      KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: Password
       KC_HEALTH_ENABLED: true
@@ -34,6 +34,95 @@ services:
     depends_on:
       - mysql-hh
 
+  mysql-hp-exporter:
+    container_name: mysql-hh-exporter
+    image: quay.io/prometheus/mysqld-exporter
+    command:
+      - "--mysqld.username=root:Password"
+      - "--mysqld.address=mysql-hp:3307"
+    #environment:
+    #  DATA_SOURCE_NAME: "root:P4ssword!@(mysql-hp:3306)/" # Adjust credentials and MySQL host/port
+    ports:
+      - '9104:9104'
+    depends_on:
+      - mysql-hh
+
+  prometheus:
+    image: prom/prometheus
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    command:
+      - --enable-feature=exemplar-storage
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
+#      - token_volume:/app/tokens
+    ports:
+      - "9090:9090"
+    depends_on:
+      - mysql-hp-exporter
+      - keycloak-hh
+
+  grafana:
+    image: grafana/grafana
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    volumes:
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3001:3000"
+
+  ipfs_node_1:
+    image: ipfs/go-ipfs:v0.12.2
+    container_name: ipfs_node_1
+    ports:
+      - "38080:38080"
+      - "34001:34001"
+    volumes:
+
+      - ./docker/ipfs/ipfs_staging_1:/export
+      - ./docker/ipfs/ipfs_data_1:/data/ipfs
+#      - ipfs_staging:/export
+#      - ipfs_data:/data/ipfs
+
+  ipfs_node_2:
+    image: ipfs/go-ipfs:v0.12.2
+    container_name: ipfs_node_2
+    ports:
+      - "38081:38080"
+      - "34002:34001"
+    volumes:
+      - ./docker/ipfs/ipfs_staging_2:/export
+      - ./docker/ipfs/ipfs_data_2:/data/ipfs
+
+  ipfs_cluster:
+    image: ipfs/ipfs-cluster:latest
+    container_name: ipfs_cluster
+    depends_on:
+        - ipfs_node_1
+        - ipfs_node_2
+    environment:
+      CLUSTER_SECRET: "af5bb078b010635db910f9ef8d117d22a41a714f8119491a1a2316e275721880"
+      IPFS_API: "/dns4/ipfs_node/tcp/5001"
+    ports:
+      - "9094:9094"
+    volumes:
+      - ./docker/ipfs/ipfs_cluster_data:/data/ipfs-cluster
+
 volumes:
+
     mysql_data:
+    ipfs_staging:
+    ipfs_data:
+    ipfs_staging_2:
+    ipfs_data_2:
+    ipfs_cluster_data:
+
+
+
+
 

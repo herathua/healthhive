@@ -2,6 +2,7 @@ package io.bootify.health_hive.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 
 public class UserDTO {
@@ -13,18 +14,36 @@ public class UserDTO {
     private String fullName;
 
     @NotNull
+    @Size(max = 255)
+    @UserEmailUnique
+    private String email;
+
+    @NotNull
+    @Size(max = 255)
+    private String telephoneNumber;
+
+    @NotNull
     private Gender gender;
 
     @NotNull
     private Integer age;
 
     @NotNull
-    @Size(max = 255)
-    @UserEmailUnique
-    private String email;
+    private LocalDate dateOfBirth;
 
-    @Size(max = 255)
-    private String telephoneNumber;
+    @Size(max = 5)
+    private String birthCertificateNumber;
+
+    @NotNull
+    @Size(max = 12)
+    @UserNicUnique
+    private String nic;
+
+    @Size(max = 60)
+    private String emergencyContactName;
+
+    @Size(max = 10)
+    private String emergencyContactNumber;
 
     public Long getId() {
         return id;
@@ -40,6 +59,22 @@ public class UserDTO {
 
     public void setFullName(final String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(final String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     public Gender getGender() {
@@ -58,20 +93,44 @@ public class UserDTO {
         this.age = age;
     }
 
-    public String getEmail() {
-        return email;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    public void setDateOfBirth(final LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public String getTelephoneNumber() {
-        return telephoneNumber;
+    public String getBirthCertificateNumber() {
+        return birthCertificateNumber;
     }
 
-    public void setTelephoneNumber(final String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
+    public void setBirthCertificateNumber(final String birthCertificateNumber) {
+        this.birthCertificateNumber = birthCertificateNumber;
+    }
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(final String nic) {
+        this.nic = nic;
+    }
+
+    public String getEmergencyContactName() {
+        return emergencyContactName;
+    }
+
+    public void setEmergencyContactName(final String emergencyContactName) {
+        this.emergencyContactName = emergencyContactName;
+    }
+
+    public String getEmergencyContactNumber() {
+        return emergencyContactNumber;
+    }
+
+    public void setEmergencyContactNumber(final String emergencyContactNumber) {
+        this.emergencyContactNumber = emergencyContactNumber;
     }
 
 }
