@@ -40,3 +40,6 @@ springdoc:
 
 server:
   port: 33000
+
+file:
+  upload-dir: C:\Users\uvher\OneDrive\Documents\HealthHiveBackend\healthhive\src\test\resources

@@ -8,13 +8,28 @@ import io.bootify.health_hive.repos.DataUploadRequestRepository;
 import io.bootify.health_hive.repos.FileRepository;
 import io.bootify.health_hive.repos.LabDataUploadRepository;
 import io.bootify.health_hive.util.NotFoundException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
 public class FileService {
+
+    @Value("${file.upload-dir}") // Spring Boot configuration property for upload directory
+    private String UPLOAD_DIR;
 
     private final FileRepository fileRepository;
     private final LabDataUploadRepository labDataUploadRepository;
@@ -78,9 +93,42 @@ public class FileService {
                 .orElseThrow(() -> new NotFoundException("labDataUpload not found"));
         file.setLabDataUpload(labDataUpload);
         final DataUploadRequest dataUploadReqeust = fileDTO.getDataUploadRequest() == null ? null : dataUploadRequestRepository.findById(fileDTO.getDataUploadRequest())
-                .orElseThrow(() -> new NotFoundException("dataUploadReqeust not found"));
+                .orElseThrow(() -> new NotFoundException("dataUpload Reqeust not found"));
         file.setDataUploadRequest(dataUploadReqeust);
         return file;
+    }
+
+
+    public String saveFile(MultipartFile file) throws IOException {
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String fileName = UUID.randomUUID().toString() + "_" + originalFileName;
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        try {
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath);
+            return filePath.toString();
+        } catch (IOException e) {
+            throw new IOException("Could not save file: " + fileName, e);
+        }
+    }
+
+    public ByteArrayResource getFile(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            byte[] data = Files.readAllBytes(path);
+            return new ByteArrayResource(data);
+        } catch (IOException e) {
+            throw new NotFoundException("File not found");
+        }
+    }
+
+    public boolean exists(Long fileId) {
+        return fileRepository.existsById(fileId);
     }
 
 }
