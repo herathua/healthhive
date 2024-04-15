@@ -43,3 +43,8 @@ server:
 
 file:
   upload-dir: C:\Users\uvher\OneDrive\Documents\HealthHiveBackend\healthhive\src\test\resources
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: DEBUG
