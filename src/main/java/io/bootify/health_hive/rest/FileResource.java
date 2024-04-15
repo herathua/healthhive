@@ -1,6 +1,8 @@
 package io.bootify.health_hive.rest;
 
 import io.bootify.health_hive.model.FileDTO;
+import io.bootify.health_hive.model.FileType;
+import io.bootify.health_hive.model.LabDataUploadDTO;
 import io.bootify.health_hive.service.FileService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -8,14 +10,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -40,7 +37,21 @@ public class FileResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) {
+    public ResponseEntity<Long> createFile(
+            @RequestParam(name = "labRequestId") final Long labRequestId,
+            @RequestPart("file") MultipartFile file
+            /*,@RequestBody @Valid final FileDTO fileDTO*/) {
+
+        String FileType = file.getContentType();
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        FileDTO fileDTO = new FileDTO();
+        //final Long createdId = labDataUploadService.create(labDataUploadDTO);
+
+        //labDataUploadDTO.setId(createdId);
+        fileDTO.setName(fileName);
+        fileDTO.setLabDataUpload(labRequestId);
+        fileDTO.setType(io.bootify.health_hive.model.FileType.valueOf(FileType));
+
         final Long createdId = fileService.create(fileDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }

@@ -62,6 +62,7 @@ public class FileService {
         fileDTO.setId(file.getId());
         fileDTO.setName(file.getName());
         fileDTO.setType(file.getType());
+        fileDTO.setFilePath(file.getFilePath());
         fileDTO.setCreatedDate(file.getCreatedDate());
         fileDTO.setLabDataUpload(file.getLabDataUpload() == null ? null : file.getLabDataUpload().getId());
         fileDTO.setDataUploadReqeust(file.getDataUploadRequest() == null ? null : file.getDataUploadRequest().getId());
@@ -71,6 +72,7 @@ public class FileService {
     private File mapToEntity(final FileDTO fileDTO, final File file) {
         file.setName(fileDTO.getName());
         file.setType(fileDTO.getType());
+        file.setFilePath(fileDTO.getFilePath());
         file.setCreatedDate(fileDTO.getCreatedDate());
         final LabDataUpload labDataUpload = fileDTO.getLabDataUpload() == null ? null : labDataUploadRepository.findById(fileDTO.getLabDataUpload())
                 .orElseThrow(() -> new NotFoundException("labDataUpload not found"));

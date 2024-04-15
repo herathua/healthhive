@@ -17,7 +17,6 @@ public class FileDTO {
     private FileType type;
 
 
-
     private String filePath;
 
     private LocalDate createdDate;
@@ -26,13 +25,6 @@ public class FileDTO {
 
     private Long dataUploadReqeust;
 
-    public String getFile() {
-        return filePath;
-    }
-
-    public void setFile(String filePath) {
-        this.filePath = filePath;
-    }
 
     public Long getId() {
         return id;
@@ -82,4 +74,11 @@ public class FileDTO {
         this.dataUploadReqeust = dataUploadReqeust;
     }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
 }
