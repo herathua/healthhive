@@ -18,7 +18,7 @@ public class FileDTO {
 
 
 
-    private MultipartFile file;
+    private String filePath;
 
     private LocalDate createdDate;
 
@@ -26,12 +26,12 @@ public class FileDTO {
 
     private Long dataUploadReqeust;
 
-    public MultipartFile getFile() {
-        return file;
+    public String getFile() {
+        return filePath;
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setFile(String filePath) {
+        this.filePath = filePath;
     }
 
     public Long getId() {

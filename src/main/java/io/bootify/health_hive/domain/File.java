@@ -34,6 +34,9 @@ public class File {
     private String name;
 
     @Column(nullable = false)
+    private String filePath;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FileType type;
 
@@ -70,6 +73,14 @@ public class File {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(final String filePath) {
+        this.filePath = filePath;
     }
 
     public FileType getType() {
