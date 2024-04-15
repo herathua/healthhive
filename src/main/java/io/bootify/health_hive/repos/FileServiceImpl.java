@@ -6,5 +6,7 @@ public interface FileServiceImpl {
 
     String saveFileToIPFS(String name,MultipartFile file);
 
+    byte[] getFileFromIPFS(String hash);
+
     //byte[] getFileFromIPFS(String hash);
 }

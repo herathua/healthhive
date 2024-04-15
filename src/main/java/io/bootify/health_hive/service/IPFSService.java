@@ -37,7 +37,6 @@ public class IPFSService implements FileServiceImpl {
         }
     }
 
-
     @Override
     public byte[] getFileFromIPFS(String hash) {
         try {
