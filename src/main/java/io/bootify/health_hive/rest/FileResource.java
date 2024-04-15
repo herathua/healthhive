@@ -5,6 +5,9 @@ import io.bootify.health_hive.service.FileService;
 import io.bootify.health_hive.service.LabDataUploadService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.core.io.ByteArrayResource;
@@ -67,12 +70,11 @@ public class FileResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateFile(
+    public ResponseEntity<Long> updateFile(
             @PathVariable(name = "id") final Long fileId,
             @RequestParam(name = "labRequestId") final Long labRequestId,
             @RequestPart("file") MultipartFile file) throws IOException {
 
-        // Assuming you have a method to check if the file exists
         if (!fileService.exists(fileId)) {
             return ResponseEntity.notFound().build();
         }
@@ -99,14 +101,36 @@ public class FileResource {
         fileDTO.setFilePath(filePath);
         fileService.update(fileId, fileDTO);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(fileId, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteFile(@PathVariable(name = "id") final Long id) {
-        fileService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<FileDTO> deleteFile(@PathVariable(name = "id") final Long id) {
+        FileDTO fileDTO = fileService.get(id); // Retrieve file information
+        if (fileDTO != null) {
+            // Get the file path from the file DTO
+            String filePath = fileDTO.getFilePath();
+
+            // Delete the file from the file system
+            try {
+                Path path = Paths.get(filePath);
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                // Handle any errors that occur during file deletion
+                // For example, log the error
+                e.printStackTrace();
+                // Return an appropriate response to the client
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+            // Once the file is deleted from the file system, delete it from the database
+            fileService.delete(id);
+            return ResponseEntity.ok(fileDTO);
+        } else {
+            // If the file does not exist in the database, return a not found response
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
