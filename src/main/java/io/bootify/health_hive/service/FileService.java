@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -20,6 +21,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -130,5 +132,41 @@ public class FileService {
     public boolean exists(Long fileId) {
         return fileRepository.existsById(fileId);
     }
+    @Scheduled(fixedDelay = 300000) // Scheduled to run every 5 minutes (300,000 milliseconds)
+    public void deleteExpiredFiles() {
+        // Calculate the time 5 minutes ago
+        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
 
+        // Find files older than 5 minutes
+        List<File> expiredFiles = fileRepository.findByCreatedDateBefore(fiveMinutesAgo);
+
+        // Delete each expired file and associated data
+        for (File file : expiredFiles) {
+            deleteFileAndData(file);
+        }
+    }
+
+    private void deleteFileAndData(File file) {
+        // Delete the file from the file system
+        Path filePath = Paths.get(file.getFilePath());
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            // Handle deletion failure
+            e.printStackTrace();
+        }
+
+        // Delete associated data
+        if (file.getLabDataUpload() != null) {
+            labDataUploadRepository.delete(file.getLabDataUpload());
+        }
+        if (file.getDataUploadRequest() != null) {
+            dataUploadRequestRepository.delete(file.getDataUploadRequest());
+        }
+
+        // Finally, delete the file entity from the database
+        fileRepository.delete(file);
+        System.out.println("Deleted:");
+    }
 }
+
