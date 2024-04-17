@@ -53,7 +53,7 @@ public class DataUploadRequestService {
     public Long create(final DataUploadRequestDTO dataUploadRequestDTO, MultipartFile file) {
         final DataUploadRequest dataUploadRequest = new DataUploadRequest();
         mapToEntity(dataUploadRequestDTO, dataUploadRequest);
-        ipfsService.saveFileToIPFS(file.getOriginalFilename(), file);
+        ipfsService.saveFile(file);
         return dataUploadRequestRepository.save(dataUploadRequest).getId();
     }
 

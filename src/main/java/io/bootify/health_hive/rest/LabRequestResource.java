@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/labRequests", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LabRequestResource {
-
     private final LabRequestService labRequestService;
+
+//    public LabRequestResource(final LabRequestService labRequestService) {
+//        this.labRequestService = labRequestService;
+//    }
+
     private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
@@ -26,10 +30,10 @@ public class LabRequestResource {
         this.messagingTemplate = messagingTemplate;
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<LabRequestDTO> getLabRequest(@PathVariable(name = "id") final Long id) {
         LabRequestDTO labRequestDTO = labRequestService.get(id);
-        //messagingTemplate.convertAndSend("/topic/lab/" + id, "Lab data updated"); // Sending WebSocket message
         return ResponseEntity.ok(labRequestDTO);
     }
 
