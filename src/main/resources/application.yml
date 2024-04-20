@@ -1,4 +1,6 @@
 spring:
+  cors:
+    allowed-origins: "chrome-extension://pfdhoblngboilpfeibdedpjgfnlcodoo"
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/Health-Hive?serverTimezone=UTC}
     username: ${JDBC_DATABASE_USERNAME:root}
@@ -7,6 +9,7 @@ spring:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
       validation-query-timeout: 30
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -40,3 +43,13 @@ springdoc:
 
 server:
   port: 33000
+
+file:
+  upload-dir: C:\Users\uvher\OneDrive\Documents\HealthHiveBackend\healthhive\src\test\resources
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: DEBUG
+    org.springframework.web.cors: DEBUG
+

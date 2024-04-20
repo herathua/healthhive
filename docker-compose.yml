@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql-hh:
     container_name: mysql-hh
@@ -7,10 +9,19 @@ services:
       - MYSQL_ROOT_PASSWORD=Password
     ports:
       - 3307:3306
-
     volumes:
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
       - mysql_data:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"  # AMQP port
+      - "15672:15672"  # RabbitMQ management UI
+      - "61613:61613"  # RabbitMQ STOMP over WebSocket port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
   keycloak-hh:
     container_name: keycloak-hh
@@ -40,8 +51,6 @@ services:
     command:
       - "--mysqld.username=root:Password"
       - "--mysqld.address=mysql-hp:3307"
-    #environment:
-    #  DATA_SOURCE_NAME: "root:P4ssword!@(mysql-hp:3306)/" # Adjust credentials and MySQL host/port
     ports:
       - '9104:9104'
     depends_on:
@@ -56,7 +65,6 @@ services:
     volumes:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
-    #      - token_volume:/app/tokens
     ports:
       - "9090:9090"
     depends_on:
@@ -75,16 +83,13 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3001:3000"
-  ##################################################################################
-  ## Cluster PEER 0 ################################################################
-  ##################################################################################
 
   ipfs0:
     container_name: ipfs0
     image: ipfs/kubo:release
     ports:
-      - "4001:4001" # ipfs swarm - expose if needed/wanted
-      - "5001:5001" # ipfs api - expose if needed/wanted
+      - "4001:4001"
+      - "5001:5001"
     volumes:
       - ./compose/ipfs0:/data/ipfs
 
@@ -95,27 +100,18 @@ services:
       - ipfs0
     environment:
       CLUSTER_PEERNAME: cluster0
-      CLUSTER_SECRET: ${CLUSTER_SECRET} # From shell variable if set
+      CLUSTER_SECRET: ${CLUSTER_SECRET}
       CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs0/tcp/5001
-      CLUSTER_CRDT_TRUSTEDPEERS: '*' # Trust all peers in Cluster
-      CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094 # Expose API
-      CLUSTER_MONITORPINGINTERVAL: 2s # Speed up peer discovery
+      CLUSTER_CRDT_TRUSTEDPEERS: '*'
+      CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094
+      CLUSTER_MONITORPINGINTERVAL: 2s
     ports:
-      # Open API port (allows ipfs-cluster-ctl usage on host)
       - "127.0.0.1:9094:9094"
-      # The cluster swarm port would need  to be exposed if this container
-      # was to connect to cluster peers on other hosts.
-      # But this is just a testing cluster.
-      - "9095:9095" # Cluster IPFS Proxy endpoint
-      - "9096:9096" # Cluster swarm endpoint
+      - "9095:9095"
+      - "9096:9096"
     volumes:
       - ./compose/cluster0:/data/ipfs-cluster
 
-  ##################################################################################
-  ## Cluster PEER 1 ################################################################
-  ##################################################################################
-
-  # See Cluster PEER 0 for comments (all removed here and below)
   ipfs1:
     container_name: ipfs1
     image: ipfs/kubo:release
@@ -132,20 +128,16 @@ services:
       CLUSTER_SECRET: ${CLUSTER_SECRET}
       CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs1/tcp/5001
       CLUSTER_CRDT_TRUSTEDPEERS: '*'
-      CLUSTER_MONITORPINGINTERVAL: 2s # Speed up peer discovery
+      CLUSTER_MONITORPINGINTERVAL: 2s
     volumes:
       - ./compose/cluster1:/data/ipfs-cluster
 
-  ##################################################################################
-  ## Cluster PEER 2 ################################################################
-  ##################################################################################
-
-  # See Cluster PEER 0 for comments (all removed here and below)
   ipfs2:
     container_name: ipfs2
     image: ipfs/kubo:release
     volumes:
       - ./compose/ipfs2:/data/ipfs
+
 
   cluster2:
     container_name: cluster2
@@ -168,6 +160,5 @@ services:
 volumes:
 
   mysql_data:
-
 
 

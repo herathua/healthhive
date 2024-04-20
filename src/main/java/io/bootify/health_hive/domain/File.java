@@ -1,6 +1,5 @@
 package io.bootify.health_hive.domain;
 
-import io.bootify.health_hive.model.FileType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -34,8 +33,10 @@ public class File {
     private String name;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private FileType type;
+    private String filePath;
+
+    @Column(nullable = false)
+    private String type;
 
     @Column
     private LocalDate createdDate;
@@ -72,11 +73,19 @@ public class File {
         this.name = name;
     }
 
-    public FileType getType() {
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(final String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getType() {
         return type;
     }
 
-    public void setType(final FileType type) {
+    public void setType(final String type) {
         this.type = type;
     }
 

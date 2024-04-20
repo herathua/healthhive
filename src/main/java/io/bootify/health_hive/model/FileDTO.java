@@ -3,7 +3,6 @@ package io.bootify.health_hive.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-import org.springframework.web.multipart.MultipartFile;
 
 public class FileDTO {
 
@@ -14,11 +13,10 @@ public class FileDTO {
     private String name;
 
     @NotNull
-    private FileType type;
+    private String type;
 
 
-
-    private MultipartFile file;
+    private String filePath;
 
     private LocalDate createdDate;
 
@@ -26,13 +24,6 @@ public class FileDTO {
 
     private Long dataUploadReqeust;
 
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    public void setFile(MultipartFile file) {
-        this.file = file;
-    }
 
     public Long getId() {
         return id;
@@ -50,11 +41,11 @@ public class FileDTO {
         this.name = name;
     }
 
-    public FileType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(final FileType type) {
+    public void setType(final String type) {
         this.type = type;
     }
 
@@ -80,6 +71,14 @@ public class FileDTO {
 
     public void setDataUploadReqeust(final Long dataUploadReqeust) {
         this.dataUploadReqeust = dataUploadReqeust;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
 }

@@ -11,17 +11,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 
 @Service
 public class IPFSService implements FileServiceImpl {
 
     @Autowired
     IPFSConfig ipfsConfig;
+
+
+
     @Override
-    public String saveFileToIPFS(String name, MultipartFile file) {
+    public String saveFile(MultipartFile file) {
+
+
         try {
 
             InputStream inputStream = new ByteArrayInputStream(file.getBytes());
@@ -35,10 +40,11 @@ public class IPFSService implements FileServiceImpl {
         } catch (IOException ex) {
             throw new RuntimeException("Error whilst communicating with the IPFS node", ex);
         }
+
     }
 
     @Override
-    public byte[] getFileFromIPFS(String hash) {
+    public byte[] loadFile(String hash) {
         try {
 
             IPFS ipfs = ipfsConfig.ipfs;
@@ -48,6 +54,6 @@ public class IPFSService implements FileServiceImpl {
         } catch (IOException ex) {
             throw new RuntimeException("Error whilst communicating with the IPFS node", ex);
         }
-
     }
+
 }
