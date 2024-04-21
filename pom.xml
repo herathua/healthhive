@@ -90,7 +90,7 @@
             <version>6.1.5</version>
         </dependency>
 
-
+        <!--IPFS-->
         <dependency>
             <groupId>com.github.ipfs</groupId>
             <artifactId>java-ipfs-http-client</artifactId>
@@ -108,6 +108,23 @@
             <version>1.1.15</version>
         </dependency>
 
+        <!--Security-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+        <!--Lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
 
     </dependencies>
 
