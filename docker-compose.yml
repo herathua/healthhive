@@ -112,6 +112,14 @@ services:
     volumes:
       - ./docker/cluster0:/data/ipfs-cluster
 
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    command: [ "--db", "/ganache_data", "--mnemonic", "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat", "--chainId", "1337" ]
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./docker/ganache_data:/ganache_data
+
 volumes:
 
   mysql_data:

@@ -1,0 +1,27 @@
+
+
+wrapper generating command : web3j generate truffle --truffle-json=E:\UOM\Health-Hive\Truffle\build\contracts\StringStorage.json -o E:\UOM\Health-Hive\Health_Hive\src\main\java -p io.bootify.health_hive.Contract
+
+E:\UOM\Health-Hive\Health_Hive\src\main\java\io\bootify\health_hive\Contract
+Deploying 'StringStorage'
+   -------------------------
+   > transaction hash:    0x44c0aab4e24ac2e90feadcfa0649c74ccff45d421363ba53bd14f33b7994ab78
+   > Blocks: 0            Seconds: 0
+   > contract address:    0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0
+   > block number:        1
+   > block timestamp:     1713895168
+   > account:             0x627306090abaB3A6e1400e9345bC60c78a8BEf57
+   > balance:             99.99096254
+   > gas used:            451873 (0x6e521)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00903746 ETH
+
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.00903746 ETH
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.00903746 ETH

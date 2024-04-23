@@ -56,7 +56,7 @@ public class StringStorage extends Contract {
 
     static {
         _addresses = new HashMap<String, String>();
-        _addresses.put("1713854696625", "0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da");
+        _addresses.put("1713894809639", "0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0");
     }
 
     @Deprecated
@@ -77,20 +77,6 @@ public class StringStorage extends Contract {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-//    public static List<StringStoredEventResponse> getStringStoredEvents(TransactionReceipt transactionReceipt) {
-//        List<Contract.EventValuesWithLog> eventValuesList = Contract.staticExtractEventParametersWithLog(STRINGSTORED_EVENT, transactionReceipt);
-//        List<StringStoredEventResponse> responses = new ArrayList<>();
-//        for (Contract.EventValuesWithLog eventValues : eventValuesList) {
-//            StringStoredEventResponse response = new StringStoredEventResponse();
-//            response.log = eventValues.getLog();
-//            response.transactionId = (BigInteger) eventValues.getIndexedValues().get(0).getValue();
-//            response.storedString = (String) eventValues.getNonIndexedValues().get(0).getValue();
-//            responses.add(response);
-//        }
-//        return responses;
-//    }
-
-    // this is the real code genarated by web3j
     public static List<StringStoredEventResponse> getStringStoredEvents(TransactionReceipt transactionReceipt) {
         List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(STRINGSTORED_EVENT, transactionReceipt);
         ArrayList<StringStoredEventResponse> responses = new ArrayList<StringStoredEventResponse>(valueList.size());
