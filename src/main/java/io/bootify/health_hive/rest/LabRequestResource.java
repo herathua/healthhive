@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+//import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,12 +22,12 @@ public class LabRequestResource {
 //        this.labRequestService = labRequestService;
 //    }
 
-    private final SimpMessagingTemplate messagingTemplate;
+//    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public LabRequestResource(LabRequestService labRequestService, SimpMessagingTemplate messagingTemplate) {
+    public LabRequestResource(LabRequestService labRequestService /*,SimpMessagingTemplate messagingTemplate*/) {
         this.labRequestService = labRequestService;
-        this.messagingTemplate = messagingTemplate;
+//        this.messagingTemplate = messagingTemplate;
     }
 
 
@@ -42,7 +42,7 @@ public class LabRequestResource {
     public ResponseEntity<Long> createLabRequest(
             @RequestBody @Valid final LabRequestDTO labRequestDTO) {
         final Long createdId = labRequestService.create(labRequestDTO);
-        messagingTemplate.convertAndSend("/topic/lab/" + labRequestDTO, "Lab data updated"); // Sending WebSocket message
+        /*messagingTemplate.convertAndSend("/topic/lab/" + labRequestDTO, "Lab data updated"); // Sending WebSocket message*/
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 

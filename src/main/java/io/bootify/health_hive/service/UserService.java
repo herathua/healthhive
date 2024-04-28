@@ -55,8 +55,8 @@ public class UserService {
     public Long create(final UserDTO userDTO) {
         final User user = new User();
         mapToEntity(userDTO, user);
-         String msg = keycloackService.createUserInKeycloak(userDTO);
-        System.out.println("\n\nkeycloak message: " + msg + "\n\n");
+//         String msg = keycloackService.createUserInKeycloak(userDTO);
+//        System.out.println("\n\nkeycloak message: " + msg + "\n\n");
         return userRepository.save(user).getId();
     }
 

@@ -1,139 +1,62 @@
 package io.bootify.health_hive.rest;
 
 import io.bootify.health_hive.model.FileDTO;
-import io.bootify.health_hive.model.LabDataUploadDTO;
 import io.bootify.health_hive.service.FileService;
-import io.bootify.health_hive.service.LabDataUploadService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
 @RestController
 @RequestMapping(value = "/api/files", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FileResource {
+
     private final FileService fileService;
-    private final LabDataUploadService labDataUploadService;
-    public FileResource(final FileService fileService, LabDataUploadService labDataUploadService) {
+
+    public FileResource(final FileService fileService) {
         this.fileService = fileService;
-        this.labDataUploadService = labDataUploadService;
     }
-    /**
-     * Retrieve all files.
-     */
+
     @GetMapping
     public ResponseEntity<List<FileDTO>> getAllFiles() {
         return ResponseEntity.ok(fileService.findAll());
     }
-    /**
-     * Retrieve a file by ID and return it as a byte array.
-     */
+
     @GetMapping("/{id}")
-    public ResponseEntity<ByteArrayResource> getFile(@PathVariable(name = "id") final Long id) {
-        FileDTO fileDTO = fileService.get(id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(fileDTO.getType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDTO.getName() + "\"")
-                .body(fileService.getFile(fileDTO.getFilePath()));
+    public ResponseEntity<FileDTO> getFile(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(fileService.get(id));
     }
-    /**
-     * Create a new file.
-     */
+
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createFile(
-            @RequestParam(name = "labRequestId") final Long labRequestId,
-            @RequestPart("file") MultipartFile file) throws IOException {
-        // Create file DTO and lab data upload DTO
-        FileDTO fileDTO = new FileDTO();
-        LabDataUploadDTO labDataUploadDTO = new LabDataUploadDTO();
-        // Extract file details
-        String fileType = file.getContentType();
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        // Create lab data upload entity
-        final Long createdFileId = labDataUploadService.create(labDataUploadDTO);
-        // Save file to filesystem
-        String filePath = fileService.saveFile(file);
-        // Populate DTOs with data
-        labDataUploadDTO.setDescription(fileName);
-        labDataUploadDTO.setLabRequest(labRequestId);
-        fileDTO.setName(fileName);
-        fileDTO.setLabDataUpload(createdFileId);
-        fileDTO.setType(fileType);
-        fileDTO.setFilePath(filePath);
-        // Create file
-        fileService.create(fileDTO);
-        return new ResponseEntity<>(createdFileId, HttpStatus.CREATED);
+    public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) {
+        final Long createdId = fileService.create(fileDTO);
+        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
-    /**
-     * Update an existing file.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<Long> updateFile(
-            @PathVariable(name = "id") final Long fileId,
-            @RequestParam(name = "labRequestId") final Long labRequestId,
-            @RequestPart("file") MultipartFile file) throws IOException {
-        if (!fileService.exists(fileId)) {
-            return ResponseEntity.notFound().build();
-        }
-        // Extract file details
-        String fileType = file.getContentType();
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        // Update lab data upload description
-        LabDataUploadDTO labDataUploadDTO = new LabDataUploadDTO();
-        labDataUploadDTO.setDescription(fileName);
-        labDataUploadDTO.setLabRequest(labRequestId);
-        labDataUploadService.update(fileService.get(fileId).getLabDataUpload(), labDataUploadDTO);
-        // Save the updated file to filesystem
-        String filePath = fileService.saveFile(file);
-        // Update file entity
-        FileDTO fileDTO = new FileDTO();
-        fileDTO.setId(fileId);
-        fileDTO.setName(fileName);
-        fileDTO.setLabDataUpload(fileService.get(fileId).getLabDataUpload());
-        fileDTO.setType(fileType);
-        fileDTO.setFilePath(filePath);
-        fileService.update(fileId, fileDTO);
 
-        return new ResponseEntity<>(fileId, HttpStatus.CREATED);
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateFile(@PathVariable(name = "id") final Long id,
+                                           @RequestBody @Valid final FileDTO fileDTO) {
+        fileService.update(id, fileDTO);
+        return ResponseEntity.ok(id);
     }
-    /**
-     * Delete a file by ID.
-     */
+
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<FileDTO> deleteFile(@PathVariable(name = "id") final Long id) {
-        FileDTO fileDTO = fileService.get(id); // Retrieve file information
-        if (fileDTO != null) {
-            // Get the file path from the file DTO
-            String filePath = fileDTO.getFilePath();
-            // Delete the file from the file system
-            try {
-                Path path = Paths.get(filePath);
-                Files.deleteIfExists(path);
-            } catch (IOException e) {
-                // Handle any errors that occur during file deletion
-                // For example, log the error
-                e.printStackTrace();
-                // Return an appropriate response to the client
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-            // Once the file is deleted from the file system, delete it from the database
-            fileService.delete(id);
-            return ResponseEntity.ok(fileDTO);
-        } else {
-            // If the file does not exist in the database, return a not found response
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteFile(@PathVariable(name = "id") final Long id) {
+        fileService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
