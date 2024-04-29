@@ -13,10 +13,10 @@ public class LabRequestDTO {
     @NotNull
     private String invoice;
 
-    @LabRequestUserUnique
+    @NotNull
     private Long user;
 
-    @LabRequestLabUnique
+    @NotNull
     private Long lab;
 
     public Long getId() {

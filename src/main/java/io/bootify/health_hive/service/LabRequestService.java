@@ -26,8 +26,8 @@ public class LabRequestService {
 
 
     public LabRequestService(final LabRequestRepository labRequestRepository,
-            final UserRepository userRepository, final LabRepository labRepository,
-            final LabDataUploadRepository labDataUploadRepository) {
+                             final UserRepository userRepository, final LabRepository labRepository,
+                             final LabDataUploadRepository labDataUploadRepository) {
         this.labRequestRepository = labRequestRepository;
         this.userRepository = userRepository;
         this.labRepository = labRepository;

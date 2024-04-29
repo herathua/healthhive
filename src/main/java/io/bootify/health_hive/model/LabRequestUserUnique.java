@@ -41,7 +41,7 @@ public @interface LabRequestUserUnique {
         private final HttpServletRequest request;
 
         public LabRequestUserUniqueValidator(final LabRequestService labRequestService,
-                final HttpServletRequest request) {
+                                             final HttpServletRequest request) {
             this.labRequestService = labRequestService;
             this.request = request;
         }
