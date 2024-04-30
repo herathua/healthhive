@@ -8,8 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -38,13 +38,13 @@ public class LabRequest {
     @Column(nullable = false, columnDefinition = "longtext")
     private String invoice;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_email_id")
+    private User userEmail;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lab_id", unique = true)
-    private Lab lab;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lab_email_id")
+    private Lab labEmail;
 
     @OneToMany(mappedBy = "labRequest")
     private Set<LabDataUpload> labDataUploads;
@@ -81,20 +81,20 @@ public class LabRequest {
         this.invoice = invoice;
     }
 
-    public User getUser() {
-        return user;
+    public User getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser(final User user) {
-        this.user = user;
+    public void setUserEmail(final User userEmail) {
+        this.userEmail = userEmail;
     }
 
-    public Lab getLab() {
-        return lab;
+    public Lab getLabEmail() {
+        return labEmail;
     }
 
-    public void setLab(final Lab lab) {
-        this.lab = lab;
+    public void setLabEmail(final Lab labEmail) {
+        this.labEmail = labEmail;
     }
 
     public Set<LabDataUpload> getLabDataUploads() {

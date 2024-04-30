@@ -1,10 +1,14 @@
 package io.bootify.health_hive.model;
 
+import jakarta.validation.constraints.Size;
+
 
 public class DataUploadRequestDTO {
 
     private Long id;
-    private Long user;
+
+    @Size(max = 100)
+    private String user;
 
     public Long getId() {
         return id;
@@ -14,11 +18,11 @@ public class DataUploadRequestDTO {
         this.id = id;
     }
 
-    public Long getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(final Long user) {
+    public void setUser(final String user) {
         this.user = user;
     }
 

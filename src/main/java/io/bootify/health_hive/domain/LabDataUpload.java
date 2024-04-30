@@ -24,12 +24,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class LabDataUpload {
 
     @Id
-    @Column(nullable = false, updatable = false)//updatable = false ??
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "\"description\"", columnDefinition = "longtext")
-    private String description;
+    @Column(nullable = false, columnDefinition = "longtext")
+    private String discription;
 
     @OneToMany(mappedBy = "labDataUpload")
     private Set<File> files;
@@ -54,12 +54,12 @@ public class LabDataUpload {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDiscription() {
+        return discription;
     }
 
-    public void setDescription(final String description) {
-        this.description = description;
+    public void setDiscription(final String discription) {
+        this.discription = discription;
     }
 
     public Set<File> getFiles() {

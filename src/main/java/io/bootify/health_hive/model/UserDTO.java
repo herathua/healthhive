@@ -7,16 +7,13 @@ import java.time.LocalDate;
 
 public class UserDTO {
 
-    private Long id;
+    @Size(max = 100)
+    @UserUserEmailValid
+    private String userEmail;
 
     @NotNull
     @Size(max = 255)
     private String fullName;
-
-    @NotNull
-    @Size(max = 255)
-    @UserEmailUnique
-    private String email;
 
     @NotNull
     @Size(max = 255)
@@ -45,12 +42,12 @@ public class UserDTO {
     @Size(max = 10)
     private String emergencyContactNumber;
 
-    public Long getId() {
-        return id;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    public void setUserEmail(final String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getFullName() {
@@ -59,14 +56,6 @@ public class UserDTO {
 
     public void setFullName(final String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
     }
 
     public String getTelephoneNumber() {

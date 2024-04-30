@@ -4,10 +4,10 @@ import io.bootify.health_hive.domain.Lab;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface LabRepository extends JpaRepository<Lab, Long> {
-
-    boolean existsByLabRegIDIgnoreCase(String labRegID);
+public interface LabRepository extends JpaRepository<Lab, String> {
 
     boolean existsByEmailIgnoreCase(String email);
+
+    boolean existsByLabRegIDIgnoreCase(String labRegID);
 
 }

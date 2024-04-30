@@ -4,7 +4,7 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 
-import io.bootify.health_hive.service.LabReportShareService;
+import io.bootify.health_hive.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
@@ -19,48 +19,56 @@ import org.springframework.web.servlet.HandlerMapping;
 
 
 /**
- * Validate that the userEmail value isn't taken yet.
+ * Check that userEmail is present and available when a new User is created.
  */
 @Target({ FIELD, METHOD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = LabReportSharePatientUnique.LabReportSharePatientUniqueValidator.class
+        validatedBy = UserUserEmailValid.UserUserEmailValidValidator.class
 )
-public @interface LabReportSharePatientUnique {
+public @interface UserUserEmailValid {
 
-    String message() default "{Exists.labReportShare.Patient}";
+    String message() default "";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class LabReportSharePatientUniqueValidator implements ConstraintValidator<LabReportSharePatientUnique, String> {
+    class UserUserEmailValidValidator implements ConstraintValidator<UserUserEmailValid, String> {
 
-        private final LabReportShareService labReportShareService;
+        private final UserService userService;
         private final HttpServletRequest request;
 
-        public LabReportSharePatientUniqueValidator(
-                final LabReportShareService labReportShareService,
-                final HttpServletRequest request) {
-            this.labReportShareService = labReportShareService;
+        public UserUserEmailValidValidator(final UserService userService,
+                                           final HttpServletRequest request) {
+            this.userService = userService;
             this.request = request;
         }
 
         @Override
         public boolean isValid(final String value, final ConstraintValidatorContext cvContext) {
-            if (value == null) {
-                // no value present
-                return true;
-            }
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
-            final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equalsIgnoreCase(labReportShareService.get(Long.parseLong(currentId)).getPatient())) {
-                // value hasn't changed
+            final String currentId = pathVariables.get("userEmail");
+            if (currentId != null) {
+                // only relevant for new objects
                 return true;
             }
-            return !labReportShareService.patientExists(value);
+            String error = null;
+            if (value == null) {
+                // missing input
+                error = "NotNull";
+            } else if (userService.userEmailExists(value)) {
+                error = "Exists.user.userEmail";
+            }
+            if (error != null) {
+                cvContext.disableDefaultConstraintViolation();
+                cvContext.buildConstraintViolationWithTemplate("{" + error + "}")
+                        .addConstraintViolation();
+                return false;
+            }
+            return true;
         }
 
     }

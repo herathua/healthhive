@@ -1,6 +1,7 @@
 package io.bootify.health_hive.model;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 
 public class LabRequestDTO {
@@ -13,11 +14,11 @@ public class LabRequestDTO {
     @NotNull
     private String invoice;
 
-    @NotNull
-    private Long user;
+    @Size(max = 100)
+    private String userEmail;
 
-    @NotNull
-    private Long lab;
+    @Size(max = 100)
+    private String labEmail;
 
     public Long getId() {
         return id;
@@ -43,20 +44,20 @@ public class LabRequestDTO {
         this.invoice = invoice;
     }
 
-    public Long getUser() {
-        return user;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser(final Long user) {
-        this.user = user;
+    public void setUserEmail(final String userEmail) {
+        this.userEmail = userEmail;
     }
 
-    public Long getLab() {
-        return lab;
+    public String getLabEmail() {
+        return labEmail;
     }
 
-    public void setLab(final Long lab) {
-        this.lab = lab;
+    public void setLabEmail(final String labEmail) {
+        this.labEmail = labEmail;
     }
 
 }

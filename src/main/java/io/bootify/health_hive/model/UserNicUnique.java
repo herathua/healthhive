@@ -54,8 +54,8 @@ public @interface UserNicUnique {
             }
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
-            final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equalsIgnoreCase(userService.get(Long.parseLong(currentId)).getNic())) {
+            final String currentId = pathVariables.get("userEmail");
+            if (currentId != null && value.equalsIgnoreCase(userService.get(currentId).getNic())) {
                 // value hasn't changed
                 return true;
             }

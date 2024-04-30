@@ -1,10 +1,15 @@
 package io.bootify.health_hive.model;
 
+import jakarta.validation.constraints.NotNull;
+
 
 public class LabDataUploadDTO {
 
     private Long id;
-    private String description;
+
+    @NotNull
+    private String discription;
+
     private Long labRequest;
 
     public Long getId() {
@@ -15,12 +20,12 @@ public class LabDataUploadDTO {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDiscription() {
+        return discription;
     }
 
-    public void setDescription(final String description) {
-        this.description = description;
+    public void setDiscription(final String discription) {
+        this.discription = discription;
     }
 
     public Long getLabRequest() {

@@ -1,5 +1,6 @@
 package io.bootify.health_hive.domain;
 
+import io.bootify.health_hive.model.FileType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -12,8 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -29,17 +30,18 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "char(36)")
+    private UUID uuid;
+
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false)
-    private String filePath;
+    @Column(nullable = false, name = "\"path\"")
+    private String path;
 
     @Column(nullable = false)
-    private String type;
-
-    @Column
-    private LocalDate createdDate;
+    @Enumerated(EnumType.STRING)
+    private FileType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lab_data_upload_id")
@@ -65,6 +67,14 @@ public class File {
         this.id = id;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(final UUID uuid) {
+        this.uuid = uuid;
+    }
+
     public String getName() {
         return name;
     }
@@ -73,28 +83,20 @@ public class File {
         this.name = name;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getPath() {
+        return path;
     }
 
-    public void setFilePath(final String filePath) {
-        this.filePath = filePath;
+    public void setPath(final String path) {
+        this.path = path;
     }
 
-    public String getType() {
+    public FileType getType() {
         return type;
     }
 
-    public void setType(final String type) {
+    public void setType(final FileType type) {
         this.type = type;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(final LocalDate createdDate) {
-        this.createdDate = createdDate;
     }
 
     public LabDataUpload getLabDataUpload() {

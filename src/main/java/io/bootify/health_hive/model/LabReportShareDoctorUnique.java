@@ -19,7 +19,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 
 /**
- * Validate that the id value isn't taken yet.
+ * Validate that the userEmail value isn't taken yet.
  */
 @Target({ FIELD, METHOD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -35,7 +35,7 @@ public @interface LabReportShareDoctorUnique {
 
     Class<? extends Payload>[] payload() default {};
 
-    class LabReportShareDoctorUniqueValidator implements ConstraintValidator<LabReportShareDoctorUnique, Long> {
+    class LabReportShareDoctorUniqueValidator implements ConstraintValidator<LabReportShareDoctorUnique, String> {
 
         private final LabReportShareService labReportShareService;
         private final HttpServletRequest request;
@@ -48,7 +48,7 @@ public @interface LabReportShareDoctorUnique {
         }
 
         @Override
-        public boolean isValid(final Long value, final ConstraintValidatorContext cvContext) {
+        public boolean isValid(final String value, final ConstraintValidatorContext cvContext) {
             if (value == null) {
                 // no value present
                 return true;
@@ -56,7 +56,7 @@ public @interface LabReportShareDoctorUnique {
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equals(labReportShareService.get(Long.parseLong(currentId)).getDoctor())) {
+            if (currentId != null && value.equalsIgnoreCase(labReportShareService.get(Long.parseLong(currentId)).getDoctor())) {
                 // value hasn't changed
                 return true;
             }

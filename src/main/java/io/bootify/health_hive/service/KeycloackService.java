@@ -35,9 +35,9 @@ public class KeycloackService {
 
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
-        user.setUsername(userDTO.getEmail());
+        user.setUsername(userDTO.getUserEmail());
         user.setFirstName(userDTO.getFullName());
-        user.setEmail(userDTO.getEmail());
+        user.setEmail(userDTO.getUserEmail());
 
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);

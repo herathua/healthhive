@@ -13,9 +13,7 @@ import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import io.bootify.health_hive.service.KeycloackService;
 
 
 @Service
@@ -25,62 +23,51 @@ public class UserService {
     private final LabRequestRepository labRequestRepository;
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final LabReportShareRepository labReportShareRepository;
-    private final KeycloackService keycloackService;
 
     public UserService(final UserRepository userRepository,
                        final LabRequestRepository labRequestRepository,
-                       final DataUploadRequestRepository dataUploadReqeustRepository,
-                       final LabReportShareRepository labReportShareRepository,
-                       final KeycloackService keycloackService) {
+                       final DataUploadRequestRepository dataUploadRequestRepository,
+                       final LabReportShareRepository labReportShareRepository) {
         this.userRepository = userRepository;
         this.labRequestRepository = labRequestRepository;
-        this.dataUploadRequestRepository = dataUploadReqeustRepository;
+        this.dataUploadRequestRepository = dataUploadRequestRepository;
         this.labReportShareRepository = labReportShareRepository;
-        this.keycloackService = keycloackService;
     }
 
     public List<UserDTO> findAll() {
-        final List<User> users = userRepository.findAll(Sort.by("id"));
+        final List<User> users = userRepository.findAll(Sort.by("userEmail"));
         return users.stream()
                 .map(user -> mapToDTO(user, new UserDTO()))
                 .toList();
     }
 
-    public UserDTO get(final Long id) {
-        return userRepository.findById(id)
+    public UserDTO get(final String userEmail) {
+        return userRepository.findById(userEmail)
                 .map(user -> mapToDTO(user, new UserDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final UserDTO userDTO) {
+    public String create(final UserDTO userDTO) {
         final User user = new User();
         mapToEntity(userDTO, user);
-//         String msg = keycloackService.createUserInKeycloak(userDTO);
-//        System.out.println("\n\nkeycloak message: " + msg + "\n\n");
-        return userRepository.save(user).getId();
+        user.setUserEmail(userDTO.getUserEmail());
+        return userRepository.save(user).getUserEmail();
     }
 
-    public void update(final Long id, final UserDTO userDTO) {
-        final User user = userRepository.findById(id)
+    public void update(final String userEmail, final UserDTO userDTO) {
+        final User user = userRepository.findById(userEmail)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(userDTO, user);
         userRepository.save(user);
     }
 
-    public void delete(final Long id) {
-        userRepository.deleteById(id);
-    }
-
-    public ResponseEntity<Void> resetPassword(final Long id, final String tempPassword) {
-        final UserDTO userDTO = get(id);
-        keycloackService.resetUserPassword(userDTO, tempPassword);
-        return ResponseEntity.ok().build();
+    public void delete(final String userEmail) {
+        userRepository.deleteById(userEmail);
     }
 
     private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
-        userDTO.setId(user.getId());
+        userDTO.setUserEmail(user.getUserEmail());
         userDTO.setFullName(user.getFullName());
-        userDTO.setEmail(user.getEmail());
         userDTO.setTelephoneNumber(user.getTelephoneNumber());
         userDTO.setGender(user.getGender());
         userDTO.setAge(user.getAge());
@@ -94,7 +81,6 @@ public class UserService {
 
     private User mapToEntity(final UserDTO userDTO, final User user) {
         user.setFullName(userDTO.getFullName());
-        user.setEmail(userDTO.getEmail());
         user.setTelephoneNumber(userDTO.getTelephoneNumber());
         user.setGender(userDTO.getGender());
         user.setAge(userDTO.getAge());
@@ -106,28 +92,28 @@ public class UserService {
         return user;
     }
 
-    public boolean emailExists(final String email) {
-        return userRepository.existsByEmailIgnoreCase(email);
+    public boolean userEmailExists(final String userEmail) {
+        return userRepository.existsByUserEmailIgnoreCase(userEmail);
     }
 
     public boolean nicExists(final String nic) {
         return userRepository.existsByNicIgnoreCase(nic);
     }
 
-    public ReferencedWarning getReferencedWarning(final Long id) {
+    public ReferencedWarning getReferencedWarning(final String userEmail) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final User user = userRepository.findById(id)
+        final User user = userRepository.findById(userEmail)
                 .orElseThrow(NotFoundException::new);
-        final LabRequest userLabRequest = labRequestRepository.findFirstByUser(user);
-        if (userLabRequest != null) {
-            referencedWarning.setKey("user.labRequest.user.referenced");
-            referencedWarning.addParam(userLabRequest.getId());
+        final LabRequest userEmailLabRequest = labRequestRepository.findFirstByUserEmail(user);
+        if (userEmailLabRequest != null) {
+            referencedWarning.setKey("user.labRequest.userEmail.referenced");
+            referencedWarning.addParam(userEmailLabRequest.getId());
             return referencedWarning;
         }
-        final DataUploadRequest userDataUploadReqeust = dataUploadRequestRepository.findFirstByUser(user);
-        if (userDataUploadReqeust != null) {
-            referencedWarning.setKey("user.dataUploadReqeust.user.referenced");
-            referencedWarning.addParam(userDataUploadReqeust.getId());
+        final DataUploadRequest userDataUploadRequest = dataUploadRequestRepository.findFirstByUser(user);
+        if (userDataUploadRequest != null) {
+            referencedWarning.setKey("user.dataUploadRequest.user.referenced");
+            referencedWarning.addParam(userDataUploadRequest.getId());
             return referencedWarning;
         }
         final LabReportShare patientLabReportShare = labReportShareRepository.findFirstByPatient(user);

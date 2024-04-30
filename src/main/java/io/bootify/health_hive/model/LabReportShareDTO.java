@@ -1,6 +1,7 @@
 package io.bootify.health_hive.model;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 
 public class LabReportShareDTO {
@@ -10,11 +11,13 @@ public class LabReportShareDTO {
     @NotNull
     private String description;
 
+    @Size(max = 100)
     @LabReportSharePatientUnique
-    private Long patient;
+    private String patient;
 
+    @Size(max = 100)
     @LabReportShareDoctorUnique
-    private Long doctor;
+    private String doctor;
 
     public Long getId() {
         return id;
@@ -32,19 +35,19 @@ public class LabReportShareDTO {
         this.description = description;
     }
 
-    public Long getPatient() {
+    public String getPatient() {
         return patient;
     }
 
-    public void setPatient(final Long patient) {
+    public void setPatient(final String patient) {
         this.patient = patient;
     }
 
-    public Long getDoctor() {
+    public String getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(final Long doctor) {
+    public void setDoctor(final String doctor) {
         this.doctor = doctor;
     }
 

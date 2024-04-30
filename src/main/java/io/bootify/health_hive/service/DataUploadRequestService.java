@@ -12,7 +12,6 @@ import io.bootify.health_hive.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -21,14 +20,12 @@ public class DataUploadRequestService {
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
-    private final IPFSService ipfsService;
 
     public DataUploadRequestService(final DataUploadRequestRepository dataUploadRequestRepository,
-                                    final UserRepository userRepository, final FileRepository fileRepository, final IPFSService ipfsService) {
+                                    final UserRepository userRepository, final FileRepository fileRepository) {
         this.dataUploadRequestRepository = dataUploadRequestRepository;
         this.userRepository = userRepository;
         this.fileRepository = fileRepository;
-        this.ipfsService = ipfsService;
     }
 
     public List<DataUploadRequestDTO> findAll() {
@@ -42,18 +39,11 @@ public class DataUploadRequestService {
         return dataUploadRequestRepository.findById(id)
                 .map(dataUploadRequest -> mapToDTO(dataUploadRequest, new DataUploadRequestDTO()))
                 .orElseThrow(NotFoundException::new);
-
     }
 
-//    public byte[] getFileFromIPFS(String hash) {
-//        return ipfsService.getFileFromIPFS(hash);
-//    }
-
-
-    public Long create(final DataUploadRequestDTO dataUploadRequestDTO, MultipartFile file) {
+    public Long create(final DataUploadRequestDTO dataUploadRequestDTO) {
         final DataUploadRequest dataUploadRequest = new DataUploadRequest();
         mapToEntity(dataUploadRequestDTO, dataUploadRequest);
-        ipfsService.saveFile(file);
         return dataUploadRequestRepository.save(dataUploadRequest).getId();
     }
 
@@ -71,10 +61,9 @@ public class DataUploadRequestService {
     private DataUploadRequestDTO mapToDTO(final DataUploadRequest dataUploadRequest,
                                           final DataUploadRequestDTO dataUploadRequestDTO) {
         dataUploadRequestDTO.setId(dataUploadRequest.getId());
-        dataUploadRequestDTO.setUser(dataUploadRequest.getUser() == null ? null : dataUploadRequest.getUser().getId());
+        dataUploadRequestDTO.setUser(dataUploadRequest.getUser() == null ? null : dataUploadRequest.getUser().getUserEmail());
         return dataUploadRequestDTO;
     }
-
 
     private DataUploadRequest mapToEntity(final DataUploadRequestDTO dataUploadRequestDTO,
                                           final DataUploadRequest dataUploadRequest) {
@@ -88,10 +77,10 @@ public class DataUploadRequestService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final DataUploadRequest dataUploadRequest = dataUploadRequestRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        final File dataUploadReqeustFile = fileRepository.findFirstByDataUploadRequest(dataUploadRequest);
-        if (dataUploadReqeustFile != null) {
+        final File dataUploadRequestFile = fileRepository.findFirstByDataUploadRequest(dataUploadRequest);
+        if (dataUploadRequestFile != null) {
             referencedWarning.setKey("dataUploadRequest.file.dataUploadRequest.referenced");
-            referencedWarning.addParam(dataUploadReqeustFile.getId());
+            referencedWarning.addParam(dataUploadRequestFile.getId());
             return referencedWarning;
         }
         return null;

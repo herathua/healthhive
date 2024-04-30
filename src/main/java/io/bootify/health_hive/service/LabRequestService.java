@@ -24,7 +24,6 @@ public class LabRequestService {
     private final LabRepository labRepository;
     private final LabDataUploadRepository labDataUploadRepository;
 
-
     public LabRequestService(final LabRequestRepository labRequestRepository,
                              final UserRepository userRepository, final LabRepository labRepository,
                              final LabDataUploadRepository labDataUploadRepository) {
@@ -62,38 +61,27 @@ public class LabRequestService {
 
     public void delete(final Long id) {
         labRequestRepository.deleteById(id);
-
     }
-
-
 
     private LabRequestDTO mapToDTO(final LabRequest labRequest, final LabRequestDTO labRequestDTO) {
         labRequestDTO.setId(labRequest.getId());
         labRequestDTO.setDescription(labRequest.getDescription());
         labRequestDTO.setInvoice(labRequest.getInvoice());
-        labRequestDTO.setUser(labRequest.getUser() == null ? null : labRequest.getUser().getId());
-        labRequestDTO.setLab(labRequest.getLab() == null ? null : labRequest.getLab().getId());
+        labRequestDTO.setUserEmail(labRequest.getUserEmail() == null ? null : labRequest.getUserEmail().getUserEmail());
+        labRequestDTO.setLabEmail(labRequest.getLabEmail() == null ? null : labRequest.getLabEmail().getEmail());
         return labRequestDTO;
     }
 
     private LabRequest mapToEntity(final LabRequestDTO labRequestDTO, final LabRequest labRequest) {
         labRequest.setDescription(labRequestDTO.getDescription());
         labRequest.setInvoice(labRequestDTO.getInvoice());
-        final User user = labRequestDTO.getUser() == null ? null : userRepository.findById(labRequestDTO.getUser())
-                .orElseThrow(() -> new NotFoundException("user not found"));
-        labRequest.setUser(user);
-        final Lab lab = labRequestDTO.getLab() == null ? null : labRepository.findById(labRequestDTO.getLab())
-                .orElseThrow(() -> new NotFoundException("lab not found"));
-        labRequest.setLab(lab);
+        final User userEmail = labRequestDTO.getUserEmail() == null ? null : userRepository.findById(labRequestDTO.getUserEmail())
+                .orElseThrow(() -> new NotFoundException("userEmail not found"));
+        labRequest.setUserEmail(userEmail);
+        final Lab labEmail = labRequestDTO.getLabEmail() == null ? null : labRepository.findById(labRequestDTO.getLabEmail())
+                .orElseThrow(() -> new NotFoundException("labEmail not found"));
+        labRequest.setLabEmail(labEmail);
         return labRequest;
-    }
-
-    public boolean userExists(final Long id) {
-        return labRequestRepository.existsByUserId(id);
-    }
-
-    public boolean labExists(final Long id) {
-        return labRequestRepository.existsByLabId(id);
     }
 
     public ReferencedWarning getReferencedWarning(final Long id) {

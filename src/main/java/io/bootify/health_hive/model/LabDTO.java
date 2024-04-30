@@ -6,10 +6,12 @@ import jakarta.validation.constraints.Size;
 
 public class LabDTO {
 
-    private Long id;
+    @Size(max = 100)
+    @LabEmailValid
+    private String email;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 100)
     @LabLabRegIDUnique
     private String labRegID;
 
@@ -21,20 +23,15 @@ public class LabDTO {
     private String address;
 
     @NotNull
-    @Size(max = 255)
-    @LabEmailUnique
-    private String email;
-
-    @NotNull
     @Size(max = 12)
     private String telephone;
 
-    public Long getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
     public String getLabRegID() {
@@ -59,14 +56,6 @@ public class LabDTO {
 
     public void setAddress(final String address) {
         this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
     }
 
     public String getTelephone() {

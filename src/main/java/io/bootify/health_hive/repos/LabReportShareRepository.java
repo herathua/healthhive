@@ -4,8 +4,6 @@ import io.bootify.health_hive.domain.LabReportShare;
 import io.bootify.health_hive.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 
 public interface LabReportShareRepository extends JpaRepository<LabReportShare, Long> {
 
@@ -13,11 +11,8 @@ public interface LabReportShareRepository extends JpaRepository<LabReportShare, 
 
     LabReportShare findFirstByDoctor(User user);
 
-    List<LabReportShare> findAllByDoctor (User user);
+    boolean existsByPatientUserEmailIgnoreCase(String userEmail);
 
-    boolean existsByPatientId(Long id);
-
-    boolean existsByDoctorId(Long id);
-
+    boolean existsByDoctorUserEmailIgnoreCase(String userEmail);
 
 }
