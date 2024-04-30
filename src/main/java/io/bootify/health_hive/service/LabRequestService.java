@@ -12,6 +12,8 @@ import io.bootify.health_hive.repos.UserRepository;
 import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,13 @@ public class LabRequestService {
                 .map(labRequest -> mapToDTO(labRequest, new LabRequestDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
+    public List<LabRequestDTO> getLabRequestsByLabId(Long labId) {
+        return labRequestRepository.findAllByLabId(labId).stream()
+                .map(labRequest -> mapToDTO(labRequest, new LabRequestDTO()))
+                .collect(Collectors.toList());
+    }
+
 
     public Long create(final LabRequestDTO labRequestDTO) {
         final LabRequest labRequest = new LabRequest();

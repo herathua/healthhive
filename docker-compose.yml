@@ -13,15 +13,15 @@ services:
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
       - mysql_data:/var/lib/mysql
 
-  rabbitmq:
-    image: rabbitmq:3.8-management
-    ports:
-      - "5672:5672"  # AMQP port
-      - "15672:15672"  # RabbitMQ management UI
-      - "61613:61613"  # RabbitMQ STOMP over WebSocket port
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+#  rabbitmq:
+#    image: rabbitmq:3.8-management
+#    ports:
+#      - "5672:5672"  # AMQP port
+#      - "15672:15672"  # RabbitMQ management UI
+#      - "61613:61613"  # RabbitMQ STOMP over WebSocket port
+#    environment:
+#      RABBITMQ_DEFAULT_USER: guest
+#      RABBITMQ_DEFAULT_PASS: guest
 
   keycloak-hh:
     container_name: keycloak-hh

@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/labRequests", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LabRequestResource {
@@ -35,6 +37,12 @@ public class LabRequestResource {
     public ResponseEntity<LabRequestDTO> getLabRequest(@PathVariable(name = "id") final Long id) {
         LabRequestDTO labRequestDTO = labRequestService.get(id);
         return ResponseEntity.ok(labRequestDTO);
+    }
+
+    @GetMapping("/lab/{id}")
+    public ResponseEntity<List<LabRequestDTO>> getLabRequestsByLabId(@PathVariable(name = "id") final Long labId) {
+        List<LabRequestDTO> labRequestDTOs = labRequestService.getLabRequestsByLabId(labId);
+        return ResponseEntity.ok(labRequestDTOs);
     }
 
     @PostMapping
