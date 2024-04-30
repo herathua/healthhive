@@ -42,6 +42,12 @@ public class LabResource {
         return ResponseEntity.ok(labService.get(id));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<LabDTO> findAllByLabId(@PathVariable String email) {
+        Lab lab = labRepository.findAllByEmail(email);
+        return ResponseEntity.ok(labService.get(lab.getId()));
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createLab(@RequestBody @Valid final LabDTO labDTO) {
