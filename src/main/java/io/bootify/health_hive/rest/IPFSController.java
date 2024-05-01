@@ -17,7 +17,7 @@ public class IPFSController {
     @Autowired
     private IPFSService ipfsService;
 
-    @PostMapping(value = "upload")
+        @PostMapping(value = "file/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         return ipfsService.saveFile(file);
     }

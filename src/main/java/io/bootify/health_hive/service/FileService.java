@@ -81,6 +81,7 @@ public class FileService {
         fileDTO.setType(file.getType());
         fileDTO.setFilePath(file.getFilePath());
         fileDTO.setCreatedDate(file.getCreatedDate());
+        fileDTO.setFileHash(file.getFileHash());
         fileDTO.setLabDataUpload(file.getLabDataUpload() == null ? null : file.getLabDataUpload().getId());
         fileDTO.setDataUploadReqeust(file.getDataUploadRequest() == null ? null : file.getDataUploadRequest().getId());
         return fileDTO;
@@ -90,6 +91,7 @@ public class FileService {
         file.setName(fileDTO.getName());
         file.setType(fileDTO.getType());
         file.setFilePath(fileDTO.getFilePath());
+        file.setFileHash(fileDTO.getFileHash());
         file.setCreatedDate(fileDTO.getCreatedDate());
         final LabDataUpload labDataUpload = fileDTO.getLabDataUpload() == null ? null : labDataUploadRepository.findById(fileDTO.getLabDataUpload())
                 .orElseThrow(() -> new NotFoundException("labDataUpload not found"));

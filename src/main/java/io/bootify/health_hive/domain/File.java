@@ -36,6 +36,9 @@ public class File {
     private String filePath;
 
     @Column(nullable = false)
+    private String fileHash;
+
+    @Column(nullable = false)
     private String type;
 
     @Column
@@ -79,6 +82,14 @@ public class File {
 
     public void setFilePath(final String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getFileHash() {
+        return fileHash;
+    }
+
+    public void setFileHash(final String fileHash) {
+        this.fileHash = fileHash;
     }
 
     public String getType() {

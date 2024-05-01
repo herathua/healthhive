@@ -17,6 +17,7 @@ public class FileDTO {
 
 
     private String filePath;
+    private String fileHash;
 
     private LocalDate createdDate;
 
@@ -81,4 +82,11 @@ public class FileDTO {
         return filePath;
     }
 
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+
+    public String getFileHash() {
+        return fileHash;
+    }
 }

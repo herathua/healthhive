@@ -55,6 +55,8 @@ public class UserResource {
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
         final Long createdId = userService.create(userDTO);
+        final String KeycloakUser = keycloakService.createUserInKeycloak(userDTO);
+        System.out.println(KeycloakUser);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
