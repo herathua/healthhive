@@ -12,7 +12,7 @@ import io.bootify.health_hive.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -50,10 +50,10 @@ public class DataUploadRequestService {
 //    }
 
 
-    public Long create(final DataUploadRequestDTO dataUploadRequestDTO, MultipartFile file) {
+    public Long create(final DataUploadRequestDTO dataUploadRequestDTO/*, MultipartFile file*/) {
         final DataUploadRequest dataUploadRequest = new DataUploadRequest();
         mapToEntity(dataUploadRequestDTO, dataUploadRequest);
-        ipfsService.saveFile(file);
+//        ipfsService.saveFile(file);
         return dataUploadRequestRepository.save(dataUploadRequest).getId();
     }
 
