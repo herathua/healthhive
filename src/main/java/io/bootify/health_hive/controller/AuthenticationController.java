@@ -20,7 +20,7 @@ public class AuthenticationController {
         // Keycloak details
         String tokenUrl = "http://keycloak-hh:8080/realms/myrealm/protocol/openid-connect/token";
         String clientId = "myclient";
-        String clientSecret = "cGfqQs4TxZHdrNkqDyveqbKhdfYseb1K";
+        String clientSecret = "MxItt9ytLm5W0wgcxS4HaDSsLzsPlep3";
 
         // Headers
         HttpHeaders headers = new HttpHeaders();

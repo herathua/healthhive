@@ -25,9 +25,9 @@ public class KeycloackService {
                 .realm("myrealm")
                 .grantType(OAuth2Constants.PASSWORD)
                 .clientId("myclient")
-                .clientSecret("diyAr7E3b9czAlN3kml57jwU1ii14Gfl")
-                .username("admin")
-                .password("admin")
+                .clientSecret("MxItt9ytLm5W0wgcxS4HaDSsLzsPlep3")
+                .username("myuser")
+                .password("myuser")
                 .build();
 
         String preName = userDTO.getFullName().substring(0, Math.min(userDTO.getFullName().length(), 3));
