@@ -6,10 +6,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import java.util.HashMap;
-import java.util.Map;
-import io.bootify.health_hive.model.LabLoginDTO;
-import io.bootify.health_hive.model.UserLoginDTO;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,10 +13,11 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
+        System.out.println("responce to login");
         // Keycloak details
         String tokenUrl = "http://keycloak-hh:8080/realms/myrealm/protocol/openid-connect/token";
         String clientId = "myclient";
-        String clientSecret = "cGfqQs4TxZHdrNkqDyveqbKhdfYseb1K";
+        String clientSecret = "Uf5UoLWaLEYgK5YS8ERNtorhl9xtEQvd";
 
         // Headers
         HttpHeaders headers = new HttpHeaders();
@@ -40,7 +37,7 @@ public class AuthenticationController {
         // RestTemplate
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, String.class);
-
+        System.out.println("keyclock responce to login");
         // Return the token (you might want to map the response to a JSON object or directly return the JSON string)
         return ResponseEntity.ok(response.getBody());
     }
