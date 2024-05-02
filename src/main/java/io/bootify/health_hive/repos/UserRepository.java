@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByNicIgnoreCase(String nic);
 
     User findByEmail(String email);
+
+    User findByGender (String gender);
 }

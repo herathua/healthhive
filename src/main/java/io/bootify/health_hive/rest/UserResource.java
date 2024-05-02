@@ -11,6 +11,8 @@ import io.bootify.health_hive.util.ReferencedException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.security.PublicKey;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +44,9 @@ public class UserResource {
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(userService.get(id));
     }
-    @GetMapping("/email/{email}")
+
+
+    @GetMapping("/userEmail/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(name = "email") final String email) {
         User user = userRepository.findByEmail(email);
         if(user == null){
