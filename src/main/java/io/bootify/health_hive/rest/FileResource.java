@@ -2,6 +2,7 @@ package io.bootify.health_hive.rest;
 
 import io.bootify.health_hive.model.FileDTO;
 import io.bootify.health_hive.service.FileService;
+import io.bootify.health_hive.service.DataUploadRequestService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -24,6 +25,7 @@ public class FileResource {
 
     private final FileService fileService;
 
+
     public FileResource(final FileService fileService) {
         this.fileService = fileService;
     }
@@ -38,9 +40,16 @@ public class FileResource {
         return ResponseEntity.ok(fileService.get(id));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<FileDTO>> getFilesByUserId(@PathVariable(name = "userId") final Long userId) {
+
+        return ResponseEntity.ok(fileService.findAllByUserId(userId));
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) {
+
         final Long createdId = fileService.create(fileDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }

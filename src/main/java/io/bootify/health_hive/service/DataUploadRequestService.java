@@ -52,6 +52,7 @@ public class DataUploadRequestService {
 
     public Long create(final DataUploadRequestDTO dataUploadRequestDTO/*, MultipartFile file*/) {
         final DataUploadRequest dataUploadRequest = new DataUploadRequest();
+        System.out.println(dataUploadRequest);
         mapToEntity(dataUploadRequestDTO, dataUploadRequest);
 //        ipfsService.saveFile(file);
         return dataUploadRequestRepository.save(dataUploadRequest).getId();
@@ -78,8 +79,11 @@ public class DataUploadRequestService {
 
     private DataUploadRequest mapToEntity(final DataUploadRequestDTO dataUploadRequestDTO,
                                           final DataUploadRequest dataUploadRequest) {
+        System.out.println("this is data upload request DTO : " + dataUploadRequestDTO.getUser());
         final User user = dataUploadRequestDTO.getUser() == null ? null : userRepository.findById(dataUploadRequestDTO.getUser())
+
                 .orElseThrow(() -> new NotFoundException("user not found"));
+
         dataUploadRequest.setUser(user);
         return dataUploadRequest;
     }

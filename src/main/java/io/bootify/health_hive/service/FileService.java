@@ -52,6 +52,13 @@ public class FileService {
                 .toList();
     }
 
+    public List<FileDTO> findAllByUserId(Long userId) {
+        final List<File> files = fileRepository.findAllByUserId(userId);
+        return files.stream()
+                .map(file -> mapToDTO(file, new FileDTO()))
+                .toList();
+    }
+
     public FileDTO get(final Long id) {
         return fileRepository.findById(id)
                 .map(file -> mapToDTO(file, new FileDTO()))
