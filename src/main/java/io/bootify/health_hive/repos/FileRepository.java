@@ -21,6 +21,9 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     List<File> findByCreatedDateBefore(LocalDateTime fiveMinutesAgo);
 
-    List<File> findFirst5ByDataUploadRequestIdOrderByLastUpdatedDesc(Long dataUploadRequestId, Pageable pageable);
+    List<File> findTop5ByDataUploadRequestIdOrLabDataUploadIdOrderByLastUpdatedDesc(Integer dataUploadRequestId, Integer labDataUploadId);
+
+//    @Query
+//    List<File> findByDataUploadRequest(Long dataUploadRequestId);
 
 }

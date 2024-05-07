@@ -20,6 +20,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,15 @@ public class FileService {
                 .map(file -> mapToDTO(file, new FileDTO()))
                 .toList();
     }
+
+    public List <FileDTO> findLatestFile( Long dataUploadRequestId,Long labDataUploadId ){
+        return fileRepository.findTop5ByDataUploadRequestIdOrLabDataUploadIdOrderByLastUpdatedDesc(dataUploadRequestId.intValue(), labDataUploadId.intValue())
+                .stream()
+                .map(file -> mapToDTO(file, new FileDTO()))
+                .toList();
+    }
+
+
 
     public FileDTO get(final Long id) {
         return fileRepository.findById(id)

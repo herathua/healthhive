@@ -32,8 +32,8 @@
 //                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/api-docs/")).permitAll()
 //                        .requestMatchers(HttpMethod.PUT, "/**").authenticated()
-//                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/**").permitAll() // Changed this line
+//                        .requestMatchers(HttpMethod.GET, "/**").authenticated()
+//                        .requestMatchers(HttpMethod.POST, "/**").authenticated()
 //                        .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
 //                        .anyRequest().authenticated())
 //                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));

@@ -1,8 +1,8 @@
 package io.bootify.health_hive.rest;
 
+import io.bootify.health_hive.domain.File;
 import io.bootify.health_hive.model.FileDTO;
 import io.bootify.health_hive.service.FileService;
-import io.bootify.health_hive.service.DataUploadRequestService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -42,16 +42,27 @@ public class FileResource {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<FileDTO>> getFilesByUserId(@PathVariable(name = "userId") final Long userId) {
-
         return ResponseEntity.ok(fileService.findAllByUserId(userId));
     }
+
+    @GetMapping("/latestFive/{dataUploadRequestId}/{labDataUploadId}")
+    public ResponseEntity<List<FileDTO>> getLatestFiveFiles(@PathVariable(name = "dataUploadRequestId") final Long dataUploadRequestId,
+                                                            @PathVariable(name = "labDataUploadId") final Long labDataUploadId) {
+        return ResponseEntity.ok(fileService.findLatestFile(dataUploadRequestId, labDataUploadId));
+    }
+
+
 
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) {
 
         final Long createdId = fileService.create(fileDTO);
-        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+        try{
+            return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(createdId, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")
