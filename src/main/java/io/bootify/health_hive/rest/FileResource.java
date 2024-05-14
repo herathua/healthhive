@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/api/files", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FileResource {
     private final FileService fileService;
-    private final LabDataUploadService labDataUploadService;
-    public FileResource(final FileService fileService, LabDataUploadService labDataUploadService) {
+    // final LabDataUploadService labDataUploadService;
+    public FileResource(final FileService fileService/*, LabDataUploadService labDataUploadService*/) {
         this.fileService = fileService;
-        this.labDataUploadService = labDataUploadService;
+        //this.labDataUploadService = labDataUploadService;
     }
     /**
      * Retrieve all files.
@@ -52,27 +53,24 @@ public class FileResource {
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createFile(
             @RequestParam(name = "labRequestId") final Long labRequestId,
+            //@RequestBody final Long labRequestId,
+            //@RequestBody final LocalDate CreatedDate,
             @RequestPart("file") MultipartFile file) throws IOException {
-        // Create file DTO and lab data upload DTO
         FileDTO fileDTO = new FileDTO();
-        LabDataUploadDTO labDataUploadDTO = new LabDataUploadDTO();
-        // Extract file details
         String fileType = file.getContentType();
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         // Create lab data upload entity
-        final Long createdFileId = labDataUploadService.create(labDataUploadDTO);
-        // Save file to filesystem
         String filePath = fileService.saveFile(file);
+        fileDTO.setCreatedDate(java.time.LocalDate.now());
+        //fileDTO.setCreatedDate(CreatedDate);
+        fileDTO.setLabDataUpload(labRequestId);
         // Populate DTOs with data
-        labDataUploadDTO.setDescription(fileName);
-        labDataUploadDTO.setLabRequest(labRequestId);
         fileDTO.setName(fileName);
-        fileDTO.setLabDataUpload(createdFileId);
         fileDTO.setType(fileType);
         fileDTO.setFilePath(filePath);
-        // Create file
-        fileService.create(fileDTO);
-        return new ResponseEntity<>(createdFileId, HttpStatus.CREATED);
+        final Long createdId = fileService.create(fileDTO);
+
+        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
     /**
      * Update an existing file.
@@ -88,17 +86,13 @@ public class FileResource {
         // Extract file details
         String fileType = file.getContentType();
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        // Update lab data upload description
-        LabDataUploadDTO labDataUploadDTO = new LabDataUploadDTO();
-        labDataUploadDTO.setDescription(fileName);
-        labDataUploadDTO.setLabRequest(labRequestId);
-        labDataUploadService.update(fileService.get(fileId).getLabDataUpload(), labDataUploadDTO);
-        // Save the updated file to filesystem
         String filePath = fileService.saveFile(file);
         // Update file entity
         FileDTO fileDTO = new FileDTO();
         fileDTO.setId(fileId);
         fileDTO.setName(fileName);
+        fileDTO.setCreatedDate(java.time.LocalDate.now());
+        fileDTO.setLabDataUpload(labRequestId);
         fileDTO.setLabDataUpload(fileService.get(fileId).getLabDataUpload());
         fileDTO.setType(fileType);
         fileDTO.setFilePath(filePath);
