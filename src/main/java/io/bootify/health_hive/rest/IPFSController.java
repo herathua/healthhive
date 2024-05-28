@@ -13,12 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(value = "/")
 public class IPFSController {
-
-
     @Autowired
     private IPFSService ipfsService;
 
-        @PostMapping(value = "file/upload")
+    @PostMapping(value = "file/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         return ipfsService.saveFile(file);
     }
@@ -29,7 +27,5 @@ public class IPFSController {
         headers.set("Content-type", MediaType.ALL_VALUE);
         byte[] bytes = ipfsService.loadFile(hash);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(bytes);
-
     }
-
 }
