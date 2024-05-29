@@ -10,6 +10,9 @@ public class LabReportShareDTO {
     @NotNull
     private String description;
 
+    @NotNull
+    private String patientName;
+
     @LabReportSharePatientUnique
     private Long patient;
 
@@ -31,6 +34,9 @@ public class LabReportShareDTO {
     public void setDescription(final String description) {
         this.description = description;
     }
+
+    public String getPatientName() {return patientName;}
+    public void setPatientName(final String patientName) {this.patientName = patientName;}
 
     public Long getPatient() {
         return patient;

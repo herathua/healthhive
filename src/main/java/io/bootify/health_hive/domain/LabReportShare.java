@@ -32,6 +32,7 @@ public class LabReportShare {
             columnDefinition = "longtext"
     )
     private String description;
+    private String patientName;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", unique = true)
@@ -64,6 +65,9 @@ public class LabReportShare {
     public void setDescription(final String description) {
         this.description = description;
     }
+
+    public String getPatientName() {return patientName;}
+    public void setPatientName(final String patientName) {this.patientName = patientName;}
 
     public User getPatient() {
         return patient;

@@ -25,9 +25,8 @@ public class LabRequest {
             columnDefinition = "longtext"
     )
     private String description;
+    private String customerName;
 
-    @Column(nullable = false, columnDefinition = "longtext")
-    private String invoice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -64,13 +63,9 @@ public class LabRequest {
         this.description = description;
     }
 
-    public String getInvoice() {
-        return invoice;
-    }
+    public String getCustomerName() {return customerName;}
 
-    public void setInvoice(final String invoice) {
-        this.invoice = invoice;
-    }
+    public void setCustomerName(final String customerName) {this.customerName = customerName;}
 
     public User getUser() {
         return user;

@@ -46,7 +46,7 @@ public class UserResource {
     }
 
 
-    @GetMapping("/userEmail/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(name = "email") final String email) {
         User user = userRepository.findByEmail(email);
         if(user == null){
@@ -54,6 +54,7 @@ public class UserResource {
         }
         return ResponseEntity.ok(userService.get(user.getId()));
     }
+
 
     @PostMapping
     @ApiResponse(responseCode = "201")
