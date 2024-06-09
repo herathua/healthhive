@@ -12,8 +12,7 @@ import java.util.List;
 
 
 public interface FileRepository extends JpaRepository<File, Long> {
-    @Query("SELECT f FROM File f JOIN f.dataUploadRequest dur JOIN dur.user u WHERE u.id = :userId")
-    List<File> findAllByUserId(Long userId);
+
 
     File findFirstByLabDataUpload(LabDataUpload labDataUpload);
 

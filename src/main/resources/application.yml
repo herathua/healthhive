@@ -9,11 +9,11 @@ spring:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
       validation-query-timeout: 30
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://keycloak-hh:8080/realms/myrealm
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak-hh:8080/realms/myrealm
   jpa:
     hibernate:
       ddl-auto: update

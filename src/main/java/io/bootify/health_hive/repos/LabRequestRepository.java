@@ -14,6 +14,9 @@ public interface LabRequestRepository extends JpaRepository<LabRequest, Long> {
 
     // Find all LabRequest records by the associated lab ID
     List<LabRequest> findAllByLabId(Long labId);
+
+    List<LabRequest> findAllByUserId(Long userId);
+    
     LabRequest findFirstByUser(User user);
 
     LabRequest findFirstByLab(Lab lab);

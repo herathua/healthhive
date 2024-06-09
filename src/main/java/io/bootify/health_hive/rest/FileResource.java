@@ -1,7 +1,7 @@
 package io.bootify.health_hive.rest;
 
-import io.bootify.health_hive.domain.File;
 import io.bootify.health_hive.model.FileDTO;
+import io.bootify.health_hive.model.UserFileDTO;
 import io.bootify.health_hive.service.FileService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -35,7 +35,7 @@ public class FileResource {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<FileDTO>> getFilesByUserId(@PathVariable(name = "userId") final Long userId) {
+    public ResponseEntity<List<UserFileDTO>> getFilesByUserId(@PathVariable(name = "userId") final Long userId) {
         return ResponseEntity.ok(fileService.findAllByUserId(userId));
     }
 

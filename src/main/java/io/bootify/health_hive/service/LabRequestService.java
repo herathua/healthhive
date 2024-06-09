@@ -55,6 +55,12 @@ public class LabRequestService {
                 .collect(Collectors.toList());
     }
 
+    public List<LabRequestDTO> getLabRequestsByUserId(Long userId) {
+        return labRequestRepository.findAllByUserId(userId).stream()
+                .map(labRequest -> mapToDTO(labRequest, new LabRequestDTO()))
+                .collect(Collectors.toList());
+    }
+
 
     public Long create(final LabRequestDTO labRequestDTO) {
         final LabRequest labRequest = new LabRequest();

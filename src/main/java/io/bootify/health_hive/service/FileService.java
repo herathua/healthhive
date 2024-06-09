@@ -2,13 +2,15 @@ package io.bootify.health_hive.service;
 
 import io.bootify.health_hive.domain.DataUploadRequest;
 import io.bootify.health_hive.domain.File;
+import io.bootify.health_hive.domain.UserFile;
 import io.bootify.health_hive.domain.LabDataUpload;
 import io.bootify.health_hive.model.FileDTO;
+import io.bootify.health_hive.model.UserFileDTO;
 import io.bootify.health_hive.repos.DataUploadRequestRepository;
 import io.bootify.health_hive.repos.FileRepository;
+import io.bootify.health_hive.repos.UserFileRepository;
 import io.bootify.health_hive.repos.LabDataUploadRepository;
 import io.bootify.health_hive.util.NotFoundException;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageRequest;
@@ -38,13 +39,16 @@ public class FileService {
     private final FileRepository fileRepository;
     private final LabDataUploadRepository labDataUploadRepository;
     private final DataUploadRequestRepository dataUploadRequestRepository;
+    private final UserFileRepository userFileRepository;
 
     public FileService(final FileRepository fileRepository,
                        final LabDataUploadRepository labDataUploadRepository,
-                       final DataUploadRequestRepository dataUploadRequestRepository) {
+                       final DataUploadRequestRepository dataUploadRequestRepository,
+                       final UserFileRepository userFileRepository) {
         this.fileRepository = fileRepository;
         this.labDataUploadRepository = labDataUploadRepository;
         this.dataUploadRequestRepository = dataUploadRequestRepository;
+        this.userFileRepository = userFileRepository;
     }
 
     public List<FileDTO> findAll() {
@@ -54,10 +58,10 @@ public class FileService {
                 .toList();
     }
 
-    public List<FileDTO> findAllByUserId(Long userId) {
-        final List<File> files = fileRepository.findAllByUserId(userId);
-        return files.stream()
-                .map(file -> mapToDTO(file, new FileDTO()))
+    public List<UserFileDTO> findAllByUserId(Long userId) {
+        final List<UserFile> userFiles = userFileRepository.findAllByUserId(userId);
+        return userFiles.stream()
+                .map(userFile -> mapToDTO(userFile, new UserFileDTO()))
                 .toList();
     }
 
@@ -105,6 +109,20 @@ public class FileService {
         return fileDTO;
     }
 
+    private UserFileDTO mapToDTO(final UserFile userFile, final UserFileDTO userFileDTO) {
+        userFileDTO.setId(userFile.getId());
+        userFileDTO.setUserId(userFile.getUserId());
+        userFileDTO.setDataUploadRequestId(userFile.getDataUploadRequestId());
+        userFileDTO.setLabDataUploadId(userFile.getLabDataUploadId());
+        userFileDTO.setCreatedDate(userFile.getCreatedDate());
+        userFileDTO.setLastUpdated(userFile.getLastUpdated());
+        userFileDTO.setFileHash(userFile.getFileHash());
+        userFileDTO.setFilePath(userFile.getFilePath());
+        userFileDTO.setName(userFile.getName());
+        userFileDTO.setLabRequestId(userFile.getLabRequestId());
+        return userFileDTO;
+    }
+
     private File mapToEntity(final FileDTO fileDTO, final File file) {
         file.setName(fileDTO.getName());
         file.setType(fileDTO.getType());
@@ -147,46 +165,6 @@ public class FileService {
         } catch (IOException e) {
             throw new NotFoundException("File not found");
         }
-    }
-
-    public boolean exists(Long fileId) {
-        return fileRepository.existsById(fileId);
-    }
-    @Scheduled(fixedDelay = 300000) // Scheduled to run every 5 minutes (300,000 milliseconds)
-    public void deleteExpiredFiles() {
-        // Calculate the time 5 minutes ago
-        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
-
-        // Find files older than 5 minutes
-        List<File> expiredFiles = fileRepository.findByCreatedDateBefore(fiveMinutesAgo);
-
-        // Delete each expired file and associated data
-        for (File file : expiredFiles) {
-            deleteFileAndData(file);
-        }
-    }
-
-    private void deleteFileAndData(File file) {
-        // Delete the file from the file system
-        Path filePath = Paths.get(file.getFilePath());
-        try {
-            Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            // Handle deletion failure
-            e.printStackTrace();
-        }
-
-        // Delete associated data
-        if (file.getLabDataUpload() != null) {
-            labDataUploadRepository.delete(file.getLabDataUpload());
-        }
-        if (file.getDataUploadRequest() != null) {
-            dataUploadRequestRepository.delete(file.getDataUploadRequest());
-        }
-
-        // Finally, delete the file entity from the database
-        fileRepository.delete(file);
-        System.out.println("Deleted:");
     }
 }
 

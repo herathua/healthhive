@@ -16,4 +16,6 @@ public interface LabRepository extends JpaRepository<Lab, Long> {
 
    // MetricsDSLContext findByemail(String email);
    Lab findAllByEmail(String email);
+
+
 }

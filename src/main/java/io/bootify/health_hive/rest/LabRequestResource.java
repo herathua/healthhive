@@ -45,6 +45,12 @@ public class LabRequestResource {
         return ResponseEntity.ok(labRequestDTOs);
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<LabRequestDTO>> getLabRequestsByUserId(@PathVariable(name = "id") final Long userId) {
+        List<LabRequestDTO> labRequestDTOs = labRequestService.getLabRequestsByUserId(userId);
+        return ResponseEntity.ok(labRequestDTOs);
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createLabRequest(
