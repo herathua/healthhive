@@ -9,11 +9,18 @@ spring:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
       validation-query-timeout: 30
+
+  # security
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak-hh:8080/realms/myrealm
+          issuer-uri: http://keycloak-hh:8080/realms/Health-Hive
+          jwk-set-uri: http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/certs
+
+
+
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -28,7 +35,20 @@ spring:
   docker:
     compose:
       lifecycle-management: start-only
-error:
+
+jwt:
+  auth:
+    converter:
+      resource-id : health-hive-client
+      principal-attribute: principal_username
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
   handling:
     http-status-in-json-response: true
     exception-logging: NO_LOGGING

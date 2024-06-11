@@ -10,6 +10,7 @@ import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ public class UserResource {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    @RolesAllowed("Labrole")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(userService.get(id));
