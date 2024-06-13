@@ -11,10 +11,10 @@ public class LabRequestDTO {
     private String description;
 
     @NotNull
-    private String invoice;
+    private Long user;
 
     @NotNull
-    private Long user;
+    private String customerName;
 
     @NotNull
     private Long lab;
@@ -35,20 +35,20 @@ public class LabRequestDTO {
         this.description = description;
     }
 
-    public String getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(final String invoice) {
-        this.invoice = invoice;
-    }
-
     public Long getUser() {
         return user;
     }
 
     public void setUser(final Long user) {
         this.user = user;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public Long getLab() {

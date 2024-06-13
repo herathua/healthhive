@@ -85,7 +85,7 @@ public class LabRequestService {
     private LabRequestDTO mapToDTO(final LabRequest labRequest, final LabRequestDTO labRequestDTO) {
         labRequestDTO.setId(labRequest.getId());
         labRequestDTO.setDescription(labRequest.getDescription());
-        labRequestDTO.setInvoice(labRequest.getInvoice());
+        labRequestDTO.setCustomerName(labRequest.getCustomerName());
         labRequestDTO.setUser(labRequest.getUser() == null ? null : labRequest.getUser().getId());
         labRequestDTO.setLab(labRequest.getLab() == null ? null : labRequest.getLab().getId());
         return labRequestDTO;
@@ -93,7 +93,7 @@ public class LabRequestService {
 
     private LabRequest mapToEntity(final LabRequestDTO labRequestDTO, final LabRequest labRequest) {
         labRequest.setDescription(labRequestDTO.getDescription());
-        labRequest.setInvoice(labRequestDTO.getInvoice());
+        labRequest.setCustomerName(labRequestDTO.getCustomerName());
         final User user = labRequestDTO.getUser() == null ? null : userRepository.findById(labRequestDTO.getUser())
                 .orElseThrow(() -> new NotFoundException("user not found"));
         labRequest.setUser(user);

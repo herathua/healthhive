@@ -39,6 +39,7 @@ public class SecurityConfig {
     public static final String ADMIN = "admin";
     public static final String USER = "user";
     public static final String LAB = "lab";
+    public static final String TEMP = "temp";
     private final JwtConverter jwtConverter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,9 +47,9 @@ public class SecurityConfig {
         http.cors(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authz) ->
               //User
-               authz//.requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole(LAB)
+               authz//.requestMatchers(HttpMethod.PUT, "/api**").hasAnyRole(USER)//.requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole(LAB)
 //                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole(USER,ADMIN)
-//                        .requestMatchers(HttpMethod.POST, "/api/users*").hasRole(ADMIN)
+//                        .requestMatchers(HttpMethod.POST, "/api/users*").hasAnyRole(ADMIN,USER)
 //                        .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole(ADMIN)
 //                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reset-password").hasRole(ADMIN)
 //                        //ShareFile
@@ -86,7 +87,8 @@ public class SecurityConfig {
 //                        //IPFS
 //                        .requestMatchers(HttpMethod.POST, "file/upload").hasAnyRole(USER,LAB)
 //                        .requestMatchers(HttpMethod.GET, "file/{hash}").hasRole(USER)
-                        .anyRequest().permitAll());
+                       .anyRequest().permitAll()
+                        );
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));

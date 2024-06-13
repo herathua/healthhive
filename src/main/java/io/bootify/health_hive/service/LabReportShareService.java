@@ -69,9 +69,10 @@ public class LabReportShareService {
     }
 
     private LabReportShareDTO mapToDTO(final LabReportShare labReportShare,
-            final LabReportShareDTO labReportShareDTO) {
+                                       final LabReportShareDTO labReportShareDTO) {
         labReportShareDTO.setId(labReportShare.getId());
         labReportShareDTO.setDescription(labReportShare.getDescription());
+        labReportShareDTO.setPatientName(labReportShare.getPatientName());
         labReportShareDTO.setPatient(labReportShare.getPatient() == null ? null : labReportShare.getPatient().getId());
         labReportShareDTO.setDoctor(labReportShare.getDoctor() == null ? null : labReportShare.getDoctor().getId());
         return labReportShareDTO;
@@ -80,6 +81,7 @@ public class LabReportShareService {
     private LabReportShare mapToEntity(final LabReportShareDTO labReportShareDTO,
             final LabReportShare labReportShare) {
         labReportShare.setDescription(labReportShareDTO.getDescription());
+        labReportShare.setPatientName(labReportShareDTO.getPatientName());
         final User patient = labReportShareDTO.getPatient() == null ? null : userRepository.findById(labReportShareDTO.getPatient())
                 .orElseThrow(() -> new NotFoundException("patient not found"));
         labReportShare.setPatient(patient);
