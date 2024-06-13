@@ -18,9 +18,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
         // Keycloak details
-        String tokenUrl = "http://keycloak-hh:8080/realms/myrealm/protocol/openid-connect/token";
-        String clientId = "myclient";
-        String clientSecret = "cGfqQs4TxZHdrNkqDyveqbKhdfYseb1K";
+        String tokenUrl = "http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/token";
+        String clientId = "health-hive-client";
+//        String clientSecret = "cGfqQs4TxZHdrNkqDyveqbKhdfYseb1K";
 
         // Headers
         HttpHeaders headers = new HttpHeaders();
@@ -29,7 +29,7 @@ public class AuthenticationController {
         // Body
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("client_id", clientId);
-        body.add("client_secret", clientSecret);
+//        body.add("client_secret", clientSecret);
         body.add("grant_type", "password");
         body.add("username", userLoginDTO.getEmail());
         body.add("password", userLoginDTO.getPassword());

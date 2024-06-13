@@ -1,5 +1,6 @@
 package io.bootify.health_hive.config;
 
+import io.bootify.health_hive.domain.User;
 import jakarta.ws.rs.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,17 +38,55 @@ public class SecurityConfig {
 
     public static final String ADMIN = "admin";
     public static final String USER = "user";
-    public static final String TEMP_ROLE = "temp_role";
+    public static final String LAB = "lab";
     private final JwtConverter jwtConverter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authz) ->
-                authz.requestMatchers(HttpMethod.GET, "/api/hello").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole(ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole(TEMP_ROLE)
-                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasRole(USER)
-                        .requestMatchers(HttpMethod.GET, "/api/admin-and-user/**").hasAnyRole(ADMIN,USER)
-                        .anyRequest().authenticated());
+              //User
+               authz//.requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole(LAB)
+//                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole(USER,ADMIN)
+//                        .requestMatchers(HttpMethod.POST, "/api/users*").hasRole(ADMIN)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole(ADMIN)
+//                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reset-password").hasRole(ADMIN)
+//                        //ShareFile
+//                        .requestMatchers(HttpMethod.GET, "/api/shareFiles*").hasRole(USER)
+//                        .requestMatchers(HttpMethod.POST, "/api/shareFiles*").hasRole(USER)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/shareFiles*").hasRole(USER)
+//                        //Lab
+//                        .requestMatchers(HttpMethod.GET, "/api/labs/{id}").hasAnyRole(ADMIN,LAB)
+//                        .requestMatchers(HttpMethod.PUT, "/api/labs/{id}").hasAnyRole(LAB,ADMIN)
+//                        .requestMatchers(HttpMethod.POST, "/api/labs*").hasRole(ADMIN)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/labs/{id}").hasRole(ADMIN)
+//                        .requestMatchers(HttpMethod.PUT, "/api/labs/{id}/reset-password").hasRole(ADMIN)
+//
+//                        //Lab Request
+//                        .requestMatchers(HttpMethod.GET, "/api/labRequests*").hasAnyRole(LAB,USER)
+//                        .requestMatchers(HttpMethod.POST, "/api/labRequests*").hasAnyRole(USER)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/labRequests*").hasAnyRole(USER)
+//
+//                        //lab Report Share
+//                        .requestMatchers(HttpMethod.GET, "/api/labReportShares*").hasAnyRole(USER)
+//                        .requestMatchers(HttpMethod.POST, "/api/labReportShares*").hasAnyRole(USER)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/labReportShares*").hasAnyRole(USER)
+//
+//                        //Lab Data Upload
+//                        .requestMatchers(HttpMethod.GET, "/api/labDataUploads*").hasAnyRole(USER)
+//                        .requestMatchers(HttpMethod.POST, "/api/labDataUploads*").hasAnyRole(LAB)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/labDataUploads*").hasAnyRole(USER)
+//
+//                        //File
+//                        .requestMatchers(HttpMethod.GET, "/api/files*").hasAnyRole(USER)
+//                        .requestMatchers(HttpMethod.POST, "/api/files*").hasAnyRole(LAB)
+//                        .requestMatchers(HttpMethod.DELETE, "/api/files*").hasAnyRole(USER)
+//
+//
+//                        //IPFS
+//                        .requestMatchers(HttpMethod.POST, "file/upload").hasAnyRole(USER,LAB)
+//                        .requestMatchers(HttpMethod.GET, "file/{hash}").hasRole(USER)
+                        .anyRequest().permitAll());
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));
