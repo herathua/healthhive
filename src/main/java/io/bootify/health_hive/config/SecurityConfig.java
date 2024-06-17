@@ -46,10 +46,15 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((authz) ->
-              //User
-               authz//.requestMatchers(HttpMethod.PUT, "/api**").hasAnyRole(USER)//.requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole(LAB)
-//                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole(USER,ADMIN)
-//                        .requestMatchers(HttpMethod.POST, "/api/users*").hasAnyRole(ADMIN,USER)
+               authz
+                       //User
+////                       .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
+//                       .requestMatchers(HttpMethod.POST, "/**").hasAnyRole(USER)
+//                       .requestMatchers(HttpMethod.PUT, "/**").hasAnyRole(USER)
+//                       .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole(USER)
+//                       .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasAnyRole(LAB)
+//                       .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole(ADMIN)
+//                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyRole(ADMIN,USER)
 //                        .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole(ADMIN)
 //                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reset-password").hasRole(ADMIN)
 //                        //ShareFile
@@ -82,13 +87,12 @@ public class SecurityConfig {
 //                        .requestMatchers(HttpMethod.GET, "/api/files*").hasAnyRole(USER)
 //                        .requestMatchers(HttpMethod.POST, "/api/files*").hasAnyRole(LAB)
 //                        .requestMatchers(HttpMethod.DELETE, "/api/files*").hasAnyRole(USER)
-//
-//
-//                        //IPFS
-//                        .requestMatchers(HttpMethod.POST, "file/upload").hasAnyRole(USER,LAB)
-//                        .requestMatchers(HttpMethod.GET, "file/{hash}").hasRole(USER)
-                       .anyRequest().permitAll()
-                        );
+
+
+                        //IPFS
+//                        .requestMatchers(HttpMethod.POST, "/file/upload").hasAnyRole(USER,LAB)
+//                        .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
+                        .anyRequest().hasRole(USER));
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));

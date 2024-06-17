@@ -10,7 +10,7 @@ spring:
       validation-query: /* ping */ select 1
       validation-query-timeout: 30
 
-  # security
+#   security
   security:
     oauth2:
       resourceserver:

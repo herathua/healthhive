@@ -2,6 +2,7 @@ package io.bootify.health_hive.rest;
 
 
 import io.bootify.health_hive.service.IPFSService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,18 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Log4j2
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/api")
 public class IPFSController {
     @Autowired
     private IPFSService ipfsService;
 
-    @PostMapping(value = "file/upload")
+    @PostMapping(value = "/ipfs/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         return ipfsService.saveFile(file);
     }
 
-    @GetMapping(value = "file/{hash}")
+    @GetMapping(value = "/ipfs/{hash}")
     public ResponseEntity<byte[]> getFile(@PathVariable("hash") String hash) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type", MediaType.ALL_VALUE);

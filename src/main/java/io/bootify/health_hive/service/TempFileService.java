@@ -30,6 +30,29 @@ public class TempFileService {
             e.printStackTrace();
             throw e;
         }
+        finally {
+            dataSource.getConnection().close();
+        }
+        return fileIds;
+    }
+
+    public List<Long> getUserFiles (Long userId) throws SQLException {
+        List<Long> fileIds = new ArrayList<>();
+        String sql = "SELECT * FROM share_files WHERE user_id = " + userId + ";";
+        try (Connection con = dataSource.getConnection();
+             Statement statement = con.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                fileIds.add(resultSet.getLong("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        finally {
+            dataSource.getConnection().close();
+        }
         return fileIds;
     }
 }
