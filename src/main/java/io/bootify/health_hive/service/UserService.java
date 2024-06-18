@@ -15,7 +15,7 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import io.bootify.health_hive.service.KeycloackService;
+import io.bootify.health_hive.service.KeycloakService;
 
 
 @Service
@@ -25,13 +25,13 @@ public class UserService {
     private final LabRequestRepository labRequestRepository;
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final LabReportShareRepository labReportShareRepository;
-    private final KeycloackService keycloackService;
+    private final KeycloakService keycloackService;
 
     public UserService(final UserRepository userRepository,
                        final LabRequestRepository labRequestRepository,
                        final DataUploadRequestRepository dataUploadReqeustRepository,
                        final LabReportShareRepository labReportShareRepository,
-                       final KeycloackService keycloackService) {
+                       final KeycloakService keycloackService) {
         this.userRepository = userRepository;
         this.labRequestRepository = labRequestRepository;
         this.dataUploadRequestRepository = dataUploadReqeustRepository;
@@ -56,8 +56,8 @@ public class UserService {
     public Long create(final UserDTO userDTO) {
         final User user = new User();
         mapToEntity(userDTO, user);
-//         String msg = keycloackService.createUserInKeycloak(userDTO);
-//        System.out.println("\n\nkeycloak message: " + msg + "\n\n");
+         String msg = keycloackService.createUserInKeycloak(userDTO);
+//        System.out.println("\n\keycloak message: " + msg + "\n\n");
         return userRepository.save(user).getId();
     }
 

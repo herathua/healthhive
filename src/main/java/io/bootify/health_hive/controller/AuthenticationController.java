@@ -18,7 +18,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
         // Keycloak details
-        String tokenUrl = "http://keycloak-hh:8080/realms/myrealm/protocol/openid-connect/token";
+        String tokenUrl = "http://localhost:8080/realms/myrealm/protocol/openid-connect/token";
         String clientId = "myclient";
         String clientSecret = "cGfqQs4TxZHdrNkqDyveqbKhdfYseb1K";
 

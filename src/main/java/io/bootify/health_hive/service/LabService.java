@@ -20,10 +20,10 @@ public class LabService {
 
     private final LabRepository labRepository;
     private final LabRequestRepository labRequestRepository;
-    private final KeycloackService keycloackService;
+    private final KeycloakService keycloackService;
 
     public LabService(final LabRepository labRepository,
-                      final LabRequestRepository labRequestRepository,final KeycloackService keycloackService) {
+                      final LabRequestRepository labRequestRepository,final KeycloakService keycloackService) {
         this.labRepository = labRepository;
         this.labRequestRepository = labRequestRepository;
         this.keycloackService = keycloackService;
@@ -42,7 +42,11 @@ public class LabService {
                 .orElseThrow(NotFoundException::new);
     }
 
-
+    public LabDTO findByEmail(String email) {
+        return labRepository.findAllByEmail(email)
+                .map(lab -> mapToDTO(lab, new LabDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
 
     public Long create(final LabDTO labDTO) {
         final Lab lab = new Lab();
@@ -56,7 +60,6 @@ public class LabService {
         final Lab lab = labRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(labDTO, lab);
-        KeycloackService.updateLabInKeycloak(labDTO);
         labRepository.save(lab);
         return ("Lab updated successfully");
     }

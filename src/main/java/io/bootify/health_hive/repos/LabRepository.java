@@ -6,6 +6,7 @@ import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface LabRepository extends JpaRepository<Lab, Long> {
@@ -15,5 +16,5 @@ public interface LabRepository extends JpaRepository<Lab, Long> {
     boolean existsByEmailIgnoreCase(String email);
 
    // MetricsDSLContext findByemail(String email);
-   Lab findAllByEmail(String email);
+   Optional<Lab> findAllByEmail(String email);
 }

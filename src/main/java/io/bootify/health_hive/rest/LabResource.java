@@ -4,7 +4,7 @@ import io.bootify.health_hive.domain.Lab;
 import io.bootify.health_hive.model.LabDTO;
 import io.bootify.health_hive.model.LabLoginDTO;
 import io.bootify.health_hive.repos.LabRepository;
-import io.bootify.health_hive.service.KeycloackService;
+import io.bootify.health_hive.service.KeycloakService;
 import io.bootify.health_hive.service.LabService;
 import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedException;
@@ -23,13 +23,9 @@ import org.springframework.web.bind.annotation.*;
 public class LabResource {
 
     private final LabService labService;
-    private final KeycloackService  keycloakService;
-    private final LabRepository labRepository;
 
-    public LabResource(final LabService labService, final KeycloackService keycloakService,final LabRepository labRepository){
+    public LabResource(LabService labService) {
         this.labService = labService;
-        this.keycloakService = keycloakService;
-        this.labRepository = labRepository;
     }
 
     @GetMapping
@@ -44,8 +40,7 @@ public class LabResource {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<LabDTO> findAllByLabId(@PathVariable String email) {
-        Lab lab = labRepository.findAllByEmail(email);
-        return ResponseEntity.ok(labService.get(lab.getId()));
+        return ResponseEntity.ok( labService.findByEmail(email));
     }
 
     @PostMapping

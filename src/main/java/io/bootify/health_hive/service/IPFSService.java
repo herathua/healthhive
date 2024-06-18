@@ -1,6 +1,6 @@
 package io.bootify.health_hive.service;
 
-import io.bootify.health_hive.config.IPFSConfig;
+//import io.bootify.health_hive.config.IPFSConfig;
 import io.bootify.health_hive.repos.FileServiceImpl;
 import io.ipfs.api.IPFS;
 import io.ipfs.api.MerkleNode;
@@ -18,8 +18,8 @@ import java.io.InputStream;
 @Service
 public class IPFSService implements FileServiceImpl {
 
-    @Autowired
-    IPFSConfig ipfsConfig;
+//    @Autowired
+   // IPFSConfig ipfsConfig;
 
 
 
@@ -30,30 +30,22 @@ public class IPFSService implements FileServiceImpl {
         try {
 
             InputStream inputStream = new ByteArrayInputStream(file.getBytes());
-            IPFS ipfs = ipfsConfig.ipfs;
+      //      IPFS ipfs = ipfsConfig.ipfs;
 
             NamedStreamable.InputStreamWrapper is = new NamedStreamable.InputStreamWrapper(inputStream);
-            MerkleNode response = ipfs.add(is).get(0);
-            System.out.println("Hash (base 58): " + response.name.get() + " - " + response.hash.toBase58());
-            return response.hash.toBase58();
+//       //     MerkleNode response = ipfs.add(is).get(0);
+//            System.out.println("Hash (base 58): " + response.name.get() + " - " + response.hash.toBase58());
+//            return response.hash.toBase58();
 
         } catch (IOException ex) {
             throw new RuntimeException("Error whilst communicating with the IPFS node", ex);
         }
 
+        return null;
     }
 
     @Override
     public byte[] loadFile(String hash) {
-        try {
+       return null;
 
-            IPFS ipfs = ipfsConfig.ipfs;
-            Multihash filePointer = Multihash.fromBase58(hash);
-
-            return ipfs.cat(filePointer);
-        } catch (IOException ex) {
-            throw new RuntimeException("Error whilst communicating with the IPFS node", ex);
-        }
-    }
-
-}
+}}
