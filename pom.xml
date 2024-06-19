@@ -135,11 +135,11 @@
         </dependency>
 
         <!--web3j for smart contract-->
-        <dependency>
-            <groupId>org.web3j</groupId>
-            <artifactId>core</artifactId>
-            <version>4.11.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.web3j</groupId>-->
+<!--            <artifactId>core</artifactId>-->
+<!--            <version>4.11.2</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 

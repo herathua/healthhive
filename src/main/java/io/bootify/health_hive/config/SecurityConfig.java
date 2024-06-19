@@ -92,7 +92,8 @@ public class SecurityConfig {
                         //IPFS
 //                        .requestMatchers(HttpMethod.POST, "/file/upload").hasAnyRole(USER,LAB)
 //                        .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
-                        .anyRequest().hasRole(USER));
+                        //.anyRequest().hasRole(USER));
+                        .anyRequest().permitAll());
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));
