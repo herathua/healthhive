@@ -92,7 +92,9 @@ public class SecurityConfig {
                         //IPFS
 //                        .requestMatchers(HttpMethod.POST, "/file/upload").hasAnyRole(USER,LAB)
 //                        .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
+                       .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/**").permitAll()
                         .anyRequest().hasRole(USER));
+
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));

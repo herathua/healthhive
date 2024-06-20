@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/healthDatas", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/healthData", produces = MediaType.APPLICATION_JSON_VALUE)
 public class HealthDataResource {
 
     private final HealthDataService healthDataService;
@@ -37,6 +37,12 @@ public class HealthDataResource {
     public ResponseEntity<HealthDataDTO> getHealthData(
             @PathVariable(name = "healthDataId") final Long healthDataId) {
         return ResponseEntity.ok(healthDataService.get(healthDataId));
+    }
+
+    @GetMapping("/userId/{userId}")
+    public ResponseEntity<List<HealthDataDTO>> getHealthDataByUserId(@PathVariable (name = "userId") final Long userId) {
+        return  ResponseEntity.ok(healthDataService.findByUser(userId));
+
     }
 
     @PostMapping

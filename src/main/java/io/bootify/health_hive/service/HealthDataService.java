@@ -36,6 +36,13 @@ public class HealthDataService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<HealthDataDTO> findByUser(final Long user) {
+        final List <HealthData> healthDatas = healthDataRepository.findByUser_Id(user);
+        return healthDatas.stream()
+                .map(healthData -> mapToDTO(healthData, new HealthDataDTO()))
+                .toList();
+    }
+
     public Long create(final HealthDataDTO healthDataDTO) {
         final HealthData healthData = new HealthData();
         mapToEntity(healthDataDTO, healthData);
