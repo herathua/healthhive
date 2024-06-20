@@ -26,7 +26,6 @@ public class IPFSService implements FileServiceImpl {
     @Override
     public String saveFile(MultipartFile file) {
 
-
         try {
 
             InputStream inputStream = new ByteArrayInputStream(file.getBytes());
