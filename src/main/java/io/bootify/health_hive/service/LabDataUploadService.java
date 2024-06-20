@@ -66,6 +66,10 @@ public class LabDataUploadService {
         final LabDataUpload labDataUpload = labDataUploadRepository.findFirstByLabRequest(labRequestRepository.findById(labRequestId).orElseThrow(NotFoundException::new));
         return mapToDTO(labDataUpload, new LabDataUploadDTO());
     }
+    //findByLabRequestId
+    public List<LabDataUpload> getLabDataUploadsByLabRequestId(Long labRequestId) {
+        return labDataUploadRepository.findByLabRequestId(labRequestId);
+    }
 
     public byte[] getFileFromDatabase(LabDataUploadDTO labDataUploadDTO) {
         return null;

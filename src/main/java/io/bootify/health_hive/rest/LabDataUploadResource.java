@@ -1,5 +1,6 @@
 package io.bootify.health_hive.rest;
 
+import io.bootify.health_hive.domain.LabDataUpload;
 import io.bootify.health_hive.model.LabDataUploadDTO;
 import io.bootify.health_hive.service.LabDataUploadService;
 import io.bootify.health_hive.util.ReferencedException;
@@ -40,6 +41,22 @@ public class LabDataUploadResource {
             @PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(labDataUploadService.get(id));
     }
+    @GetMapping("/lab-data-uploads/{labRequestId}")
+    public ResponseEntity<String> getLabDataUploads(@PathVariable Long labRequestId) {
+        try {
+            LabDataUploadDTO labDataUploadDTO = labDataUploadService.searchByLabRequest(labRequestId);
+            if (labDataUploadDTO != null) {
+                return new ResponseEntity<>("Uploaded", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>("Not Uploaded", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping
     @ApiResponse(responseCode = "201")
