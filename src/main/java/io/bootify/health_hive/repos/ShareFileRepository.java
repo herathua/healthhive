@@ -7,18 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ShareFileRepository extends JpaRepository<ShareFile, Long> {
 
     ShareFile findFirstByLabReportShare(LabReportShare labReportShare);
 
-
-    @Query("SELECT sf FROM ShareFile sf WHERE sf.dateCreated < :dateTime")
-    List<ShareFile> findFilesCreatedBefore(LocalDateTime dateTime);
-
-
-
-
+    @Query("SELECT s FROM ShareFile s WHERE s.doctorId = ?1")
+    List<ShareFile> findByDoctorId(Long doctorId);
 
 }

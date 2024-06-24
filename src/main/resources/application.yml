@@ -2,9 +2,9 @@ spring:
   cors:
     allowed-origins: "chrome-extension://pfdhoblngboilpfeibdedpjgfnlcodoo"
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/Health-Hive?serverTimezone=UTC}
-    username: ${JDBC_DATABASE_USERNAME:root}
-    password: ${JDBC_DATABASE_PASSWORD:Password}
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://healthhivedb.cpceyykqk0vx.ap-south-1.rds.amazonaws.com:3306/Health-Hive?serverTimezone=UTC}
+    username: ${JDBC_DATABASE_USERNAME:healthhive_admin}
+    password: ${JDBC_DATABASE_PASSWORD:health_hiveuom}
     dbcp2:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1

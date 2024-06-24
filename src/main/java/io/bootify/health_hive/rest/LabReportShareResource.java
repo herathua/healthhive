@@ -2,6 +2,8 @@ package io.bootify.health_hive.rest;
 
 import io.bootify.health_hive.model.LabReportShareDTO;
 import io.bootify.health_hive.service.LabReportShareService;
+import io.bootify.health_hive.util.ReferencedException;
+import io.bootify.health_hive.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -49,7 +51,7 @@ public class LabReportShareResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateLabReportShare(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final LabReportShareDTO labReportShareDTO) {
+                                                     @RequestBody @Valid final LabReportShareDTO labReportShareDTO) {
         labReportShareService.update(id, labReportShareDTO);
         return ResponseEntity.ok(id);
     }
@@ -57,6 +59,10 @@ public class LabReportShareResource {
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteLabReportShare(@PathVariable(name = "id") final Long id) {
+        final ReferencedWarning referencedWarning = labReportShareService.getReferencedWarning(id);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
         labReportShareService.delete(id);
         return ResponseEntity.noContent().build();
     }

@@ -38,6 +38,11 @@ public class ShareFileResource {
         return ResponseEntity.ok(shareFileService.get(id));
     }
 
+    @GetMapping("/user/{doctorId}")
+    public ResponseEntity<List<ShareFileDTO>> getSharedFiles(@PathVariable(name = "doctorId") final Long doctorId) {
+        return ResponseEntity.ok(shareFileService.findByDoctorId(doctorId));
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createShareFile(

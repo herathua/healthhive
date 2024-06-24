@@ -33,18 +33,16 @@ public class ShareFileService {
                 .toList();
     }
 
-    public List<ShareFileDTO> getFilesCreatedBeforeFiveMinutesAgo() {
-        LocalDateTime fiveMinutesAgo = LocalDateTime.now().minusMinutes(5);
-        final List <ShareFile> shareFiles = shareFileRepository.findFilesCreatedBefore(fiveMinutesAgo);
-        return shareFiles.stream()
-                .map(shareFile -> mapToDTO(shareFile, new ShareFileDTO()))
-                .toList();
-    }
-
     public ShareFileDTO get(final Long id) {
         return shareFileRepository.findById(id)
                 .map(shareFile -> mapToDTO(shareFile, new ShareFileDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+    public List<ShareFileDTO> findByDoctorId(final Long doctorId) {
+        final List<ShareFile> shareFiles = shareFileRepository.findByDoctorId(doctorId);
+        return shareFiles.stream()
+                .map(shareFile -> mapToDTO(shareFile, new ShareFileDTO()))
+                .toList();
     }
 
     public Long create(final ShareFileDTO shareFileDTO) {
@@ -67,12 +65,14 @@ public class ShareFileService {
     private ShareFileDTO mapToDTO(final ShareFile shareFile, final ShareFileDTO shareFileDTO) {
         shareFileDTO.setId(shareFile.getId());
         shareFileDTO.setFileHash(shareFile.getFileHash());
+        shareFileDTO.setDoctorId(shareFile.getDoctorId());
         shareFileDTO.setLabReportShare(shareFile.getLabReportShare() == null ? null : shareFile.getLabReportShare().getId());
         return shareFileDTO;
     }
 
     private ShareFile mapToEntity(final ShareFileDTO shareFileDTO, final ShareFile shareFile) {
         shareFile.setFileHash(shareFileDTO.getFileHash());
+        shareFile.setDoctorId(shareFileDTO.getDoctorId());
         final LabReportShare labReportShare = shareFileDTO.getLabReportShare() == null ? null : labReportShareRepository.findById(shareFileDTO.getLabReportShare())
                 .orElseThrow(() -> new NotFoundException("labReportShare not found"));
         shareFile.setLabReportShare(labReportShare);

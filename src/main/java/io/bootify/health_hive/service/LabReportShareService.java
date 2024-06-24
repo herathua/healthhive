@@ -1,15 +1,17 @@
 package io.bootify.health_hive.service;
 
 import io.bootify.health_hive.domain.LabReportShare;
+import io.bootify.health_hive.domain.ShareFile;
 import io.bootify.health_hive.domain.User;
 import io.bootify.health_hive.model.LabReportShareDTO;
 import io.bootify.health_hive.repos.LabReportShareRepository;
+import io.bootify.health_hive.repos.ShareFileRepository;
 import io.bootify.health_hive.repos.UserRepository;
 import io.bootify.health_hive.util.NotFoundException;
+import io.bootify.health_hive.util.ReferencedWarning;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -17,32 +19,20 @@ public class LabReportShareService {
 
     private final LabReportShareRepository labReportShareRepository;
     private final UserRepository userRepository;
+    private final ShareFileRepository shareFileRepository;
 
     public LabReportShareService(final LabReportShareRepository labReportShareRepository,
-            final UserRepository userRepository) {
+                                 final UserRepository userRepository, final ShareFileRepository shareFileRepository) {
         this.labReportShareRepository = labReportShareRepository;
         this.userRepository = userRepository;
+        this.shareFileRepository = shareFileRepository;
     }
-//need to remove this method(findall)
+
     public List<LabReportShareDTO> findAll() {
         final List<LabReportShare> labReportShares = labReportShareRepository.findAll(Sort.by("id"));
         return labReportShares.stream()
                 .map(labReportShare -> mapToDTO(labReportShare, new LabReportShareDTO()))
                 .toList();
-    }
-    public List<LabReportShareDTO> findAllByDoctor(Long id) {
-        final List<LabReportShare> labReportShares = labReportShareRepository.findAllByDoctor(userRepository.findById(id).get());
-        return labReportShares.stream()
-                .map(labReportShare -> mapToDTO(labReportShare, new LabReportShareDTO()))
-                .toList();
-    }
-
-    public byte [] getReportFile(LabReportShareDTO labReportShareDTO){
-        return null;
-    }
-
-    public long shareFileUpload(LabReportShareDTO labReportShareDTO, MultipartFile file){
-        return 0;
     }
 
     public LabReportShareDTO get(final Long id) {
@@ -72,16 +62,14 @@ public class LabReportShareService {
                                        final LabReportShareDTO labReportShareDTO) {
         labReportShareDTO.setId(labReportShare.getId());
         labReportShareDTO.setDescription(labReportShare.getDescription());
-        labReportShareDTO.setPatientName(labReportShare.getPatientName());
         labReportShareDTO.setPatient(labReportShare.getPatient() == null ? null : labReportShare.getPatient().getId());
         labReportShareDTO.setDoctor(labReportShare.getDoctor() == null ? null : labReportShare.getDoctor().getId());
         return labReportShareDTO;
     }
 
     private LabReportShare mapToEntity(final LabReportShareDTO labReportShareDTO,
-            final LabReportShare labReportShare) {
+                                       final LabReportShare labReportShare) {
         labReportShare.setDescription(labReportShareDTO.getDescription());
-        labReportShare.setPatientName(labReportShareDTO.getPatientName());
         final User patient = labReportShareDTO.getPatient() == null ? null : userRepository.findById(labReportShareDTO.getPatient())
                 .orElseThrow(() -> new NotFoundException("patient not found"));
         labReportShare.setPatient(patient);
@@ -91,12 +79,17 @@ public class LabReportShareService {
         return labReportShare;
     }
 
-    public boolean patientExists(final Long id) {
-        return labReportShareRepository.existsByPatientId(id);
-    }
-
-    public boolean doctorExists(final Long id) {
-        return labReportShareRepository.existsByDoctorId(id);
+    public ReferencedWarning getReferencedWarning(final Long id) {
+        final ReferencedWarning referencedWarning = new ReferencedWarning();
+        final LabReportShare labReportShare = labReportShareRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        final ShareFile labReportShareShareFile = shareFileRepository.findFirstByLabReportShare(labReportShare);
+        if (labReportShareShareFile != null) {
+            referencedWarning.setKey("labReportShare.shareFile.labReportShare.referenced");
+            referencedWarning.addParam(labReportShareShareFile.getId());
+            return referencedWarning;
+        }
+        return null;
     }
 
 }

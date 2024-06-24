@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class LabReportShare {
 
     @Id
-    @Column(nullable = false, updatable = false)//updatable = false ??
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -32,14 +32,17 @@ public class LabReportShare {
             columnDefinition = "longtext"
     )
     private String description;
+
     private String patientName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", unique = true)
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
     private User patient;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id", unique = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
     private User doctor;
 
     @CreatedDate

@@ -14,6 +14,9 @@ public class ShareFileDTO {
 
     private Long labReportShare;
 
+    private Long doctorId;
+
+
     public Long getId() {
         return id;
     }
@@ -38,4 +41,10 @@ public class ShareFileDTO {
         this.labReportShare = labReportShare;
     }
 
+    public Long getDoctorId() {
+        return doctorId;
+    }
+    public void setDoctorId(final Long doctorId) {
+        this.doctorId = doctorId;
+    }
 }

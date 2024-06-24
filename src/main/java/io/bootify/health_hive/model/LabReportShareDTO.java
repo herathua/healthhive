@@ -13,10 +13,8 @@ public class LabReportShareDTO {
     @NotNull
     private String patientName;
 
-    @LabReportSharePatientUnique
     private Long patient;
 
-    @LabReportShareDoctorUnique
     private Long doctor;
 
     public Long getId() {

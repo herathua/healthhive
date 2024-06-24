@@ -34,10 +34,11 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HOSTNAME: keycloak-hh
       KC_DB: mysql
-      KC_DB_URL_HOST: mysql-hh
+      KC_DB_URL_HOST: healthhivedb.cpceyykqk0vx.ap-south-1.rds.amazonaws.com
+      KC_DB_URL_PORT: 3306
       KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: root
-      KC_DB_PASSWORD: Password
+      KC_DB_USERNAME: healthhive_admin
+      KC_DB_PASSWORD:  health_hiveuom
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
     ports:

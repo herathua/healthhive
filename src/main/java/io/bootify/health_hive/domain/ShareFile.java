@@ -11,9 +11,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 
 @Entity
@@ -29,17 +32,20 @@ public class ShareFile {
     @Column(nullable = false)
     private String fileHash;
 
+    @Column(nullable = false)
+    private Long doctorId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lab_report_share_id")
     private LabReportShare labReportShare;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
+    OffsetDateTime dateCreated = OffsetDateTime.now(ZoneOffset.of("+05:30"));
 
     @LastModifiedDate
     @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
+    private OffsetDateTime lastUpdated = OffsetDateTime.now(ZoneOffset.of("+05:30"));
 
     public Long getId() {
         return id;
@@ -65,6 +71,13 @@ public class ShareFile {
         this.labReportShare = labReportShare;
     }
 
+    public void setDoctorId(final Long doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
     public OffsetDateTime getDateCreated() {
         return dateCreated;
     }

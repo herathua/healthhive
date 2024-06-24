@@ -1,7 +1,9 @@
 package io.bootify.health_hive.rest;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +24,11 @@ public class ControllerHello{
     @GetMapping("/user")
     public ResponseEntity<String> sayHelloToUser() {
         return ResponseEntity.ok("Hello User");
+    }
+
+    @PostMapping("/hello")
+    public ResponseEntity<String> sayHelloPost(@RequestBody String email) {
+        String userEmail = "Hello " + email;
+        return ResponseEntity.ok(email);
     }
 }

@@ -2,7 +2,7 @@ package io.bootify.health_hive.service;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import io.bootify.health_hive.service.ShareFileService;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -17,8 +17,9 @@ public class ScheduledTasks {
         this.shareFileService = shareFileService;
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 300000)
     public void performTask() {
+        System.out.println("Performing scheduled task" + LocalDateTime.now());
         try {
             List<Long> fileIds = tempFileService.getFiles();
             for (Long fileId : fileIds) {

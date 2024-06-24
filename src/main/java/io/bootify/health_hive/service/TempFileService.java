@@ -15,7 +15,7 @@ public class TempFileService {
     @Autowired
     private DataSource dataSource;
 
-    private String sql = "SELECT * FROM share_files WHERE date_created < NOW() + interval -1 MINUTE;";
+    private String sql = "SELECT * FROM share_files WHERE date_created < NOW() + interval -5 MINUTE;";
 
     public List<Long> getFiles() throws SQLException {
         List<Long> fileIds = new ArrayList<>();
