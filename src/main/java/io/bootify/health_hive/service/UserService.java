@@ -90,6 +90,7 @@ public class UserService {
         userDTO.setNic(user.getNic());
         userDTO.setEmergencyContactName(user.getEmergencyContactName());
         userDTO.setEmergencyContactNumber(user.getEmergencyContactNumber());
+        userDTO.setProfilePictureUrl(user.getProfilePictureUrl());
         return userDTO;
     }
 
@@ -104,6 +105,7 @@ public class UserService {
         user.setNic(userDTO.getNic());
         user.setEmergencyContactName(userDTO.getEmergencyContactName());
         user.setEmergencyContactNumber(userDTO.getEmergencyContactNumber());
+        user.setProfilePictureUrl(userDTO.getProfilePictureUrl());
         return user;
     }
 

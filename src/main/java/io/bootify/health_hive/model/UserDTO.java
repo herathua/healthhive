@@ -45,6 +45,9 @@ public class UserDTO {
     @Size(max = 10)
     private String emergencyContactNumber;
 
+
+    private String profilePictureUrl;
+
     public Long getId() {
         return id;
     }
@@ -131,6 +134,11 @@ public class UserDTO {
 
     public void setEmergencyContactNumber(final String emergencyContactNumber) {
         this.emergencyContactNumber = emergencyContactNumber;
+    }
+
+    public String getProfilePictureUrl() { return profilePictureUrl;}
+    public void setProfilePictureUrl(final String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
 }

@@ -58,6 +58,9 @@ public class User {
     @Column(length = 10)
     private String emergencyContactNumber;
 
+    @Column
+    private String profilePictureUrl;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
@@ -152,6 +155,11 @@ public class User {
 
     public void setEmergencyContactNumber(final String emergencyContactNumber) {
         this.emergencyContactNumber = emergencyContactNumber;
+    }
+     public String getProfilePictureUrl() {return  profilePictureUrl;}
+
+    public void setProfilePictureUrl(final String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public OffsetDateTime getDateCreated() {
