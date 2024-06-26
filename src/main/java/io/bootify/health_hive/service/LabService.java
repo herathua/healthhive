@@ -66,7 +66,7 @@ public class LabService {
 
     public void delete(final Long id) {
         labRepository.deleteById(id);
-        keycloackService.deleteLabInKeycloak(get(id));
+        keycloackService.deleteLabInKeycloak();
 
     }
     public void resetLabPassword(final Long id, final String tempPassword) {

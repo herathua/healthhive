@@ -7,8 +7,6 @@ import io.bootify.health_hive.repos.UserRepository;
 import io.bootify.health_hive.service.KeycloakService;
 import io.bootify.health_hive.service.UserService;
 import io.bootify.health_hive.util.NotFoundException;
-import io.bootify.health_hive.util.ReferencedException;
-import io.bootify.health_hive.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -86,14 +84,15 @@ public class UserResource {
         return ResponseEntity.ok(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{email}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") final Long id) {
-        final ReferencedWarning referencedWarning = userService.getReferencedWarning(id);
-        if (referencedWarning != null) {
-            throw new ReferencedException(referencedWarning);
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "email") final String email) {
+        boolean deleted = keycloakService.deleteLabInKeycloak();
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
     }
+
 }
