@@ -29,6 +29,8 @@ public class LabDTO {
     @Size(max = 12)
     private String telephone;
 
+    private String labProfilePictureUrl;
+
     public Long getId() {
         return id;
     }
@@ -76,5 +78,8 @@ public class LabDTO {
     public void setTelephone(final String telephone) {
         this.telephone = telephone;
     }
+
+    public String getLabProfilePictureUrl() {  return labProfilePictureUrl; }
+    public void setLabProfilePictureUrl(final String labProfilePictureUrl) {this.labProfilePictureUrl = labProfilePictureUrl; }
 
 }

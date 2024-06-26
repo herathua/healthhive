@@ -79,6 +79,7 @@ public class LabService {
         labDTO.setAddress(lab.getAddress());
         labDTO.setEmail(lab.getEmail());
         labDTO.setTelephone(lab.getTelephone());
+        labDTO.setLabProfilePictureUrl(lab.getLabProfilePictureUrl());
         return labDTO;
     }
 
@@ -88,6 +89,7 @@ public class LabService {
         lab.setAddress(labDTO.getAddress());
         lab.setEmail(labDTO.getEmail());
         lab.setTelephone(labDTO.getTelephone());
+        lab.setLabProfilePictureUrl(labDTO.getLabProfilePictureUrl());
         return lab;
     }
 

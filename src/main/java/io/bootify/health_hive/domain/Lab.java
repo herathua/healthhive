@@ -38,6 +38,9 @@ public class Lab {
     @Column(nullable = false, length = 12)
     private String telephone;
 
+    @Column
+    private String labProfilePictureUrl;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
@@ -93,6 +96,10 @@ public class Lab {
     public void setTelephone(final String telephone) {
         this.telephone = telephone;
     }
+
+    public String getLabProfilePictureUrl() { return labProfilePictureUrl;}
+
+    public void setLabProfilePictureUrl(final String labProfilePictureUrl) {this.labProfilePictureUrl = labProfilePictureUrl;}
 
     public OffsetDateTime getDateCreated() {
         return dateCreated;
