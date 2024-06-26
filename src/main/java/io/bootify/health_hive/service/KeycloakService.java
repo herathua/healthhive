@@ -2,16 +2,18 @@ package io.bootify.health_hive.service;
 
 import io.bootify.health_hive.model.LabDTO;
 import io.bootify.health_hive.model.UserDTO;
-import jnr.posix.WString;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -82,6 +84,13 @@ public class KeycloakService {
         credential.setValue(temporaryPassword);
 
         keycloak.realm(REALM).users().get(userId).resetPassword(credential);
+
+        // Add user to group
+        String groupId = getGroupIdByName("your-group-name", keycloak);
+        if (groupId != null) {
+            keycloak.realm(REALM).users().get(userId).joinGroup(groupId);
+        }
+
         keycloak.close();
 
         log.info("User created successfully: {}, Temporary password: {}", userDTO.getEmail(), temporaryPassword);
@@ -124,24 +133,51 @@ public class KeycloakService {
         credential.setValue(temporaryPassword);
 
         keycloak.realm(REALM).users().get(userId).resetPassword(credential);
+
+        // Add user to group
+        String groupId = getGroupIdByName("your-lab-group-name", keycloak);
+        if (groupId != null) {
+            keycloak.realm(REALM).users().get(userId).joinGroup(groupId);
+        }
+
         keycloak.close();
 
         log.info("User created successfully: {}, Temporary password: {}", labDTO.getEmail(), temporaryPassword);
         return temporaryPassword;
     }
 
-    public void deleteLabInKeycloak(LabDTO labDTO) {
+    public boolean deleteLabInKeycloak() {
         Keycloak keycloak = keycloak();
+        String userEmail = null;
         try {
-            keycloak.realm(REALM).users().delete(labDTO.getId().toString());
-            log.info("Lab user deleted successfully: {}", labDTO.getEmail());
+            // Search for the user by email
+            List<UserRepresentation> users = keycloak.realm(REALM).users().search(userEmail);
+
+            if (users != null && !users.isEmpty()) {
+                // Get the user ID
+                String userId = users.get(0).getId();
+
+                // Delete the user by ID
+                Response response = null;
+                keycloak.realm(REALM).users().get(userId).remove();
+                if (response.getStatus() == 204) {
+                    log.info("Lab user deleted successfully: {}", userEmail);
+                    return true;
+                } else {
+                    log.warn("Failed to delete lab user. Response status: {}", response.getStatus());
+                }
+            } else {
+                log.warn("Lab user with email {} not found.", userEmail);
+            }
         } catch (Exception e) {
-            log.error("Failed to delete lab user: {}", labDTO.getEmail(), e);
+            log.error("Failed to delete lab user: {}", userEmail, e);
             throw new RuntimeException("Failed to delete lab user", e);
         } finally {
             keycloak.close();
         }
+        return false;
     }
+
 
     public void resetLabPassword(Long id, String tempPassword) {
         Keycloak keycloak = keycloak();
@@ -188,11 +224,49 @@ public class KeycloakService {
         credential.setValue(temporaryPassword);
 
         keycloak.realm(REALM).users().get(userId).resetPassword(credential);
+
+        // Add user to group
+        String groupId = getGroupIdByName("your-user-group-name", keycloak);
+        if (groupId != null) {
+            keycloak.realm(REALM).users().get(userId).joinGroup(groupId);
+        }
+
         keycloak.close();
 
         log.info("User created successfully: {}, Temporary password: {}", userDTO.getEmail(), temporaryPassword);
         return temporaryPassword;
     }
+
+    public boolean deleteUserByEmail(String userEmail) {
+        Keycloak keycloak = keycloak();
+        try {
+            // Search for the user by email
+            List<UserRepresentation> users = keycloak.realm(REALM).users().search(userEmail);
+
+            if (users != null && !users.isEmpty()) {
+                // Get the user ID
+                String userId = users.get(0).getId();
+
+                // Delete the user by ID
+                Response response = keycloak.realm(REALM).users().delete(userId);
+                if (response.getStatus() == 204) {
+                    log.info("User deleted successfully: {}", userEmail);
+                    return true;
+                } else {
+                    log.warn("Failed to delete user. Response status: {}", response.getStatus());
+                }
+            } else {
+                log.warn("User with email {} not found.", userEmail);
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete user: {}", userEmail, e);
+            throw new RuntimeException("Failed to delete user", e);
+        } finally {
+            keycloak.close();
+        }
+        return false;
+    }
+
 
     public void resetUserPassword(UserDTO userDTO, String tempPassword) {
         Keycloak keycloak = keycloak();
@@ -210,5 +284,16 @@ public class KeycloakService {
         } finally {
             keycloak.close();
         }
+    }
+
+    private String getGroupIdByName(String groupName, Keycloak keycloak) {
+        List<GroupRepresentation> groups = keycloak.realm(REALM).groups().groups();
+        for (GroupRepresentation group : groups) {
+            if (group.getName().equals(groupName)) {
+                return group.getId();
+            }
+        }
+        log.error("Group not found: {}", groupName);
+        return null;
     }
 }
