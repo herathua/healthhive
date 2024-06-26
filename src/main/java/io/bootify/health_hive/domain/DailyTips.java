@@ -31,7 +31,7 @@ public class DailyTips {
     private String heading;
 
     @Column
-    @Size(max = 10)
+    @Size(max = 30)
     private String type;
 
     public String getHeading() {
