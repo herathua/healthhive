@@ -2,6 +2,8 @@ package io.bootify.health_hive.model;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 
 public class DailyTipsDTO {
 
@@ -9,6 +11,20 @@ public class DailyTipsDTO {
 
     @NotNull
     private String tip;
+
+    private String heading;
+
+    private String type;
+
+    private LocalDateTime date;
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
     public String getHeading() {
         return heading;
@@ -25,10 +41,6 @@ public class DailyTipsDTO {
     public void setType(String type) {
         this.type = type;
     }
-
-    private String heading;
-
-    private String type;
 
     public Long getId() {
         return id;

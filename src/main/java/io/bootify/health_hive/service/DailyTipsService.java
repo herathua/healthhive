@@ -53,6 +53,7 @@ public class DailyTipsService {
         dailyTipsDTO.setTip(dailyTips.getTip());
         dailyTipsDTO.setHeading(dailyTips.getHeading());
         dailyTipsDTO.setType(dailyTips.getType());
+        dailyTipsDTO.setDate(dailyTips.getDate());
         return dailyTipsDTO;
     }
 
@@ -60,6 +61,7 @@ public class DailyTipsService {
         dailyTips.setTip(dailyTipsDTO.getTip());
         dailyTips.setHeading(dailyTipsDTO.getHeading());
         dailyTips.setType(dailyTipsDTO.getType());
+        dailyTips.setDate(dailyTipsDTO.getDate());
         return dailyTips;
     }
 

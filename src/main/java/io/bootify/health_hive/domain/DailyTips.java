@@ -7,9 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.Size;
+import org.apache.james.mime4j.dom.datetime.DateTime;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
@@ -33,6 +34,17 @@ public class DailyTips {
     @Column
     @Size(max = 30)
     private String type;
+
+    @Column
+    private LocalDateTime date;
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
     public String getHeading() {
         return heading;

@@ -48,50 +48,51 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authz) ->
                authz
                        //User
-////                       .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
-//                       .requestMatchers(HttpMethod.POST, "/**").hasAnyRole(USER)
-//                       .requestMatchers(HttpMethod.PUT, "/**").hasAnyRole(USER)
-//                       .requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole(USER)
-//                       .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasAnyRole(LAB)
-//                       .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole(ADMIN)
-//                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyRole(ADMIN,USER)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole(ADMIN)
-//                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reset-password").hasRole(ADMIN)
-//                        //ShareFile
-//                        .requestMatchers(HttpMethod.GET, "/api/shareFiles*").hasRole(USER)
-//                        .requestMatchers(HttpMethod.POST, "/api/shareFiles*").hasRole(USER)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/shareFiles*").hasRole(USER)
-//                        //Lab
-//                        .requestMatchers(HttpMethod.GET, "/api/labs/{id}").hasAnyRole(ADMIN,LAB)
-//                        .requestMatchers(HttpMethod.PUT, "/api/labs/{id}").hasAnyRole(LAB,ADMIN)
-//                        .requestMatchers(HttpMethod.POST, "/api/labs*").hasRole(ADMIN)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/labs/{id}").hasRole(ADMIN)
-//                        .requestMatchers(HttpMethod.PUT, "/api/labs/{id}/reset-password").hasRole(ADMIN)
-//
-//                        //Lab Request
-//                        .requestMatchers(HttpMethod.GET, "/api/labRequests*").hasAnyRole(LAB,USER)
-//                        .requestMatchers(HttpMethod.POST, "/api/labRequests*").hasAnyRole(USER)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/labRequests*").hasAnyRole(USER)
-//
-//                        //lab Report Share
-//                        .requestMatchers(HttpMethod.GET, "/api/labReportShares*").hasAnyRole(USER)
-//                        .requestMatchers(HttpMethod.POST, "/api/labReportShares*").hasAnyRole(USER)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/labReportShares*").hasAnyRole(USER)
-//
-//                        //Lab Data Upload
-//                        .requestMatchers(HttpMethod.GET, "/api/labDataUploads*").hasAnyRole(USER)
-//                        .requestMatchers(HttpMethod.POST, "/api/labDataUploads*").hasAnyRole(LAB)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/labDataUploads*").hasAnyRole(USER)
-//
-//                        //File
-//                        .requestMatchers(HttpMethod.GET, "/api/files*").hasAnyRole(USER)
-//                        .requestMatchers(HttpMethod.POST, "/api/files*").hasAnyRole(LAB)
-//                        .requestMatchers(HttpMethod.DELETE, "/api/files*").hasAnyRole(USER)
+//                       .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
+                       .requestMatchers(HttpMethod.POST, "/api/users/email/**").hasAnyRole(USER)
+                       .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole(USER)
+                       .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyRole(ADMIN)
+                       .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasAnyRole(USER,LAB)
+                       .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole(USER)
+                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyRole(ADMIN,USER)
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reset-password").hasRole(ADMIN)
+                        //ShareFile
+                        .requestMatchers(HttpMethod.GET, "/api/shareFiles*").hasRole(USER)
+                        .requestMatchers(HttpMethod.POST, "/api/shareFiles*").hasRole(USER)
+                        .requestMatchers(HttpMethod.DELETE, "/api/shareFiles*").hasRole(USER)
+                        //Lab
+                        .requestMatchers(HttpMethod.GET, "/api/labs/{id}").hasAnyRole(ADMIN,LAB)
+                        .requestMatchers(HttpMethod.PUT, "/api/labs/{id}").hasAnyRole(LAB,ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/labs**").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, "/api/labs/{id}").hasRole(ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/labs/{id}/reset-password").hasRole(ADMIN)
+
+                        //Lab Request
+                        .requestMatchers(HttpMethod.GET, "/api/labRequests*").hasAnyRole(LAB,USER)
+                        .requestMatchers(HttpMethod.POST, "/api/labRequests*").hasAnyRole(USER)
+                        .requestMatchers(HttpMethod.DELETE, "/api/labRequests*").hasAnyRole(USER)
+
+                        //lab Report Share
+                        .requestMatchers(HttpMethod.GET, "/api/labReportShares/**").hasAnyRole(USER)
+                        .requestMatchers(HttpMethod.POST, "/api/labReportShares/**").hasAnyRole(USER)
+                        .requestMatchers(HttpMethod.DELETE, "/api/labReportShares/**").hasAnyRole(USER)
+
+                        //Lab Data Upload
+                        .requestMatchers(HttpMethod.GET, "/api/labDataUploads/**").hasAnyRole(USER)
+                        .requestMatchers(HttpMethod.POST, "/api/labDataUploads/**").hasAnyRole(LAB)
+                        .requestMatchers(HttpMethod.DELETE, "/api/labDataUploads/**").hasAnyRole(USER)
+
+                        //File
+                        .requestMatchers(HttpMethod.GET, "/api/files/**").hasAnyRole(USER)
+                        .requestMatchers(HttpMethod.POST, "/api/files/**").hasAnyRole(LAB)
+                        .requestMatchers(HttpMethod.DELETE, "/api/files/**").hasAnyRole(USER)
 
 
-                        //IPFS
-//                        .requestMatchers(HttpMethod.POST, "/file/upload").hasAnyRole(USER,LAB)
-//                        .requestMatchers(HttpMethod.GET, "/file/**").hasRole(USER)
+//                        IPFS
+                        .requestMatchers(HttpMethod.POST, "/api/ipfs/upload").hasAnyRole(USER,LAB)
+                        .requestMatchers(HttpMethod.GET, "/api/ipfs/**").hasRole(USER)
+
                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/**").permitAll()
                         .anyRequest().hasRole(USER));
 
