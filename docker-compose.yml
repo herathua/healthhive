@@ -13,64 +13,58 @@ services:
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
       - mysql_data:/var/lib/mysql
 
-#  rabbitmq:
-#    image: rabbitmq:3.8-management
-#    ports:
-#      - "5672:5672"  # AMQP port
-#      - "15672:15672"  # RabbitMQ management UI
-#      - "61613:61613"  # RabbitMQ STOMP over WebSocket port
+
+#  keycloak-hh:
+#    container_name: keycloak-hh
+#    image: quay.io/keycloak/keycloak:22.0.1
+#    command:
+#      - "start-dev"
+#      - "--hostname-port=8080"
 #    environment:
-#      RABBITMQ_DEFAULT_USER: guest
-#      RABBITMQ_DEFAULT_PASS: guest
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#      KC_HOSTNAME: keycloak-hh
+#      KC_DB: mysql
+#      KC_DB_URL_HOST: mysql-hh
+#      KC_DB_URL_DATABASE: keycloak
+#      KC_DB_USERNAME: root
+#      KC_DB_PASSWORD: Password
+#      KC_HEALTH_ENABLED: true
+#      KC_METRICS_ENABLED: true
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mysql-hh
 
-  keycloak-hh:
-    container_name: keycloak-hh
-    image: quay.io/keycloak/keycloak:22.0.1
-    command:
-      - "start-dev"
-      - "--hostname-port=8080"
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: keycloak-hh
-      KC_DB: mysql
-      KC_DB_URL_HOST: healthhivedb.cpceyykqk0vx.ap-south-1.rds.amazonaws.com
-      KC_DB_URL_PORT: 3306
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: healthhive_admin
-      KC_DB_PASSWORD:  health_hiveuom
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql-hh
+#  mysql-hp-exporter:
+#    container_name: mysql-hh-exporter
+#    image: quay.io/prometheus/mysqld-exporter
+#    command:
+#      - "--mysqld.username=root:Password"
+#      - "--mysqld.address=mysql-hp:3307"
+#    ports:
+#      - '9104:9104'
+#    depends_on:
+#      - mysql-hh
 
-  mysql-hp-exporter:
-    container_name: mysql-hh-exporter
-    image: quay.io/prometheus/mysqld-exporter
-    command:
-      - "--mysqld.username=root:Password"
-      - "--mysqld.address=mysql-hp:3307"
-    ports:
-      - '9104:9104'
-    depends_on:
-      - mysql-hh
+#  prometheus:
+#    image: prom/prometheus
+#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+#    command:
+#      - --enable-feature=exemplar-storage
+#      - --config.file=/etc/prometheus/prometheus.yml
+#    volumes:
+#      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#      - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
+#    ports:
+#      - "9090:9090"
+#    depends_on:
+#      - mysql-hp-exporter
+#      - keycloak-hh
 
-  prometheus:
-    image: prom/prometheus
-    extra_hosts: [ 'host.docker.internal:host-gateway' ]
-    command:
-      - --enable-feature=exemplar-storage
-      - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
-    ports:
-      - "9090:9090"
-    depends_on:
-      - mysql-hp-exporter
-      - keycloak-hh
+
+
+
 
   grafana:
     image: grafana/grafana
@@ -114,6 +108,7 @@ services:
       - ./docker/cluster0:/data/ipfs-cluster
 
   ganache:
+    container_name: ganache-hh
     image: trufflesuite/ganache-cli:latest
     command: [ "--db", "/ganache_data", "--mnemonic", "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat", "--chainId", "1337" ]
     ports:

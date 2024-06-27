@@ -2,9 +2,9 @@ spring:
   cors:
     allowed-origins: "chrome-extension://pfdhoblngboilpfeibdedpjgfnlcodoo"
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:mysql://healthhivedb.cpceyykqk0vx.ap-south-1.rds.amazonaws.com:3306/Health-Hive?serverTimezone=UTC}
-    username: ${JDBC_DATABASE_USERNAME:healthhive_admin}
-    password: ${JDBC_DATABASE_PASSWORD:health_hiveuom}
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://mysql-hh:3306/Health-Hive?serverTimezone=UTC}
+    username: ${JDBC_DATABASE_USERNAME:root}
+    password: ${JDBC_DATABASE_PASSWORD:Password}
     dbcp2:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
@@ -15,8 +15,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak-hh:8080/realms/Health-Hive
-          jwk-set-uri: http://keycloak-hh:8080/realms/Health-Hive/protocol/openid-connect/certs
+          issuer-uri: https://lemur-6.cloud-iam.com/auth/realms/teamnova
+          jwk-set-uri: https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/certs
 
 
 
@@ -39,7 +39,7 @@ spring:
 jwt:
   auth:
     converter:
-      resource-id : health-hive-client
+      resource-id : Health-Hive-Client
       principal-attribute: principal_username
 
 
