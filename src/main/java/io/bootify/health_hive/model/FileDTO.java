@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
-public class FileDTO {
+public class  FileDTO {
 
     private Long id;
 
