@@ -12,6 +12,7 @@ public class  FileDTO {
     @Size(max = 255)
     private String name;
 
+
     @NotNull
     private String type;
 
