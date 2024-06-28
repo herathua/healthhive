@@ -3,7 +3,6 @@ package io.bootify.health_hive.service;
 import io.bootify.health_hive.domain.Lab;
 import io.bootify.health_hive.domain.LabRequest;
 import io.bootify.health_hive.model.LabDTO;
-import io.bootify.health_hive.model.LabRequestDTO;
 import io.bootify.health_hive.repos.LabRepository;
 import io.bootify.health_hive.repos.LabRequestRepository;
 import io.bootify.health_hive.util.NotFoundException;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -66,7 +64,7 @@ public class LabService {
 
     public void delete(final Long id) {
         labRepository.deleteById(id);
-        keycloackService.deleteLabInKeycloak();
+        keycloackService.deleteLabInKeycloak(String.valueOf(id));
 
     }
     public void resetLabPassword(final Long id, final String tempPassword) {

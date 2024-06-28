@@ -1,12 +1,8 @@
 package io.bootify.health_hive.rest;
 
-import io.bootify.health_hive.domain.Lab;
 import io.bootify.health_hive.model.LabDTO;
 import io.bootify.health_hive.model.LabLoginDTO;
-import io.bootify.health_hive.repos.LabRepository;
-import io.bootify.health_hive.service.KeycloakService;
 import io.bootify.health_hive.service.LabService;
-import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedException;
 import io.bootify.health_hive.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

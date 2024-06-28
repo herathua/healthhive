@@ -87,12 +87,9 @@ public class UserResource {
     @DeleteMapping("/{email}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "email") final String email) {
-        boolean deleted = keycloakService.deleteLabInKeycloak();
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        System.out.println("Api called");
+        keycloakService.deleteUserInKeycloak((email));
+        return null;
     }
 
 }
