@@ -26,6 +26,10 @@ public class KeycloakService {
     private static final String ADMIN_USERNAME = "admin";
     private static final String ADMIN_PASSWORD = "admin";
 
+    // Hardcoded group IDs
+    private static final String GROUP1_ID = "b0eee14a-5b16-4e19-b943-d0d6574722ee";
+    private static final String GROUP2_ID = "fd64c7ab-f16a-4056-a56b-ab318978af32";
+
     private Keycloak keycloak() {
         return KeycloakBuilder.builder()
                 .serverUrl(SERVER_URL)
@@ -86,10 +90,7 @@ public class KeycloakService {
         keycloak.realm(REALM).users().get(userId).resetPassword(credential);
 
         // Add user to group 1
-        String groupId = getGroupIdByName("group1", keycloak);
-        if (groupId != null) {
-            keycloak.realm(REALM).users().get(userId).joinGroup(groupId);
-        }
+        keycloak.realm(REALM).users().get(userId).joinGroup(GROUP1_ID);
 
         keycloak.close();
 
@@ -135,10 +136,7 @@ public class KeycloakService {
         keycloak.realm(REALM).users().get(userId).resetPassword(credential);
 
         // Add user to group 2
-        String groupId = getGroupIdByName("group2", keycloak);
-        if (groupId != null) {
-            keycloak.realm(REALM).users().get(userId).joinGroup(groupId);
-        }
+        keycloak.realm(REALM).users().get(userId).joinGroup(GROUP2_ID);
 
         keycloak.close();
 
@@ -200,6 +198,7 @@ public class KeycloakService {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userDTO.getEmail());
         user.setFirstName(userDTO.getFullName());
+        user.setLastName(userDTO.getFullName());
         user.setEmail(userDTO.getEmail());
         user.setEnabled(true);
 
@@ -223,10 +222,7 @@ public class KeycloakService {
         keycloak.realm(REALM).users().get(userId).resetPassword(credential);
 
         // Add user to group 1
-        String groupId = getGroupIdByName("group1", keycloak);
-        if (groupId != null) {
-            keycloak.realm(REALM).users().get(userId).joinGroup(groupId);
-        }
+        keycloak.realm(REALM).users().get(userId).joinGroup(GROUP1_ID);
 
         keycloak.close();
 
@@ -252,42 +248,31 @@ public class KeycloakService {
         }
     }
 
-    private String getGroupIdByName(String groupName, Keycloak keycloak) {
-        List<GroupRepresentation> groups = keycloak.realm(REALM).groups().groups();
-        for (GroupRepresentation group : groups) {
-            if (group.getName().equals(groupName)) {
-                return group.getId();
-            }
-        }
-        log.error("Group not found: {}", groupName);
-        return null;
-    }
-
     public void deleteUserInKeycloak(String email) {
-        Keycloak keycloak = keycloak();
-        try {
-            // Search for the user by email
-            List<UserRepresentation> users = keycloak.realm(REALM).users().search(email);
+            Keycloak keycloak = keycloak();
+            try {
+                // Search for the user by email
+                List<UserRepresentation> users = keycloak.realm(REALM).users().search(email);
 
-            if (users != null && !users.isEmpty()) {
-                // Get the user ID
-                String userId = users.get(0).getId();
+                if (users != null && !users.isEmpty()) {
+                    // Get the user ID
+                    String userId = users.get(0).getId();
 
-                // Delete the user by ID
-                Response response = keycloak.realm(REALM).users().delete(userId);
-                if (response.getStatus() == 204) {
-                    log.info("User deleted successfully: {}", email);
+                    // Delete the user by ID
+                    Response response = keycloak.realm(REALM).users().delete(userId);
+                    if (response.getStatus() == 204) {
+                        log.info("User deleted successfully: {}", email);
+                    } else {
+                        log.warn("Failed to delete user. Response status: {}", response.getStatus());
+                    }
                 } else {
-                    log.warn("Failed to delete user. Response status: {}", response.getStatus());
+                    log.warn("User with email {} not found.", email);
                 }
-            } else {
-                log.warn("User with email {} not found.", email);
+            } catch (Exception e) {
+                log.error("Failed to delete user: {}", email, e);
+                throw new RuntimeException("Failed to delete user", e);
+            } finally {
+                keycloak.close();
             }
-        } catch (Exception e) {
-            log.error("Failed to delete user: {}", email, e);
-            throw new RuntimeException("Failed to delete user", e);
-        } finally {
-            keycloak.close();
         }
-    }
 }

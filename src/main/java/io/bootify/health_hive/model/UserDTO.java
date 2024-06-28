@@ -1,9 +1,9 @@
 package io.bootify.health_hive.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-
 
 public class UserDTO {
 
@@ -29,6 +29,7 @@ public class UserDTO {
     private Integer age;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd") // Define the date format for serialization/deserialization
     private LocalDate dateOfBirth;
 
     @Size(max = 5)

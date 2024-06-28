@@ -54,7 +54,7 @@ public class UserResource {
     public ResponseEntity<String> createUser(@RequestBody final UserDTO userDTO) {
 //        final Long createdId = userService.create(userDTO);
         System.out.println("this is some text");
-        final String tempPassword = keycloakService.createUserInKeycloak(userDTO);
+        final String tempPassword = keycloakService.addUser(userDTO);
         System.out.println("Temporary Password: " + tempPassword);
         return new ResponseEntity<>(tempPassword, HttpStatus.CREATED);
     }
