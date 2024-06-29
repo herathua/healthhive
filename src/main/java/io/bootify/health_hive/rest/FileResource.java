@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.bootify.health_hive.service.StringStorageService;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -18,10 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileResource {
 
     private final FileService fileService;
+    private final StringStorageService stringStorageService;
 
 
-    public FileResource(final FileService fileService) {
+    public FileResource(final FileService fileService, final StringStorageService stringStorageService) {
         this.fileService = fileService;
+        this.stringStorageService = stringStorageService;
     }
 
     @GetMapping
@@ -49,14 +52,17 @@ public class FileResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) {
+    public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) throws Exception {
 
 
-        final Long createdId = fileService.create(fileDTO);
+//        final Long createdId = fileService.create(fileDTO);
+        final String txId = stringStorageService.storeString(fileDTO.getFileHash());
         try{
-            return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+            return null;
+//            return new ResponseEntity<>(createdId, HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(createdId, HttpStatus.INTERNAL_SERVER_ERROR);
+//            return new ResponseEntity<>(createdId, HttpStatus.INTERNAL_SERVER_ERROR);
+            return null;
         }
     }
 
