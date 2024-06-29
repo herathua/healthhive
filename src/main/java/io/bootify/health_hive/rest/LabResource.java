@@ -4,7 +4,7 @@ import io.bootify.health_hive.domain.Lab;
 import io.bootify.health_hive.model.LabDTO;
 import io.bootify.health_hive.model.LabLoginDTO;
 import io.bootify.health_hive.repos.LabRepository;
-import io.bootify.health_hive.service.KeycloackService;
+import io.bootify.health_hive.service.KeycloakService;
 import io.bootify.health_hive.service.LabService;
 import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedException;
@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.*;
 public class LabResource {
 
     private final LabService labService;
-    private final KeycloackService  keycloakService;
+    private final KeycloakService  keycloakService;
     private final LabRepository labRepository;
 
-    public LabResource(final LabService labService, final KeycloackService keycloakService,final LabRepository labRepository){
+    public LabResource(final LabService labService, final KeycloakService keycloakService,final LabRepository labRepository){
         this.labService = labService;
         this.keycloakService = keycloakService;
         this.labRepository = labRepository;
@@ -76,13 +76,12 @@ public class LabResource {
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteLab(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<Boolean> deleteLab(@PathVariable(name = "id") final Long id) {
         final ReferencedWarning referencedWarning = labService.getReferencedWarning(id);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);
         }
-        labService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(labService.delete(id));
     }
 
 }

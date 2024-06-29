@@ -20,13 +20,13 @@ public class LabService {
 
     private final LabRepository labRepository;
     private final LabRequestRepository labRequestRepository;
-    private final KeycloackService keycloackService;
+    private final KeycloakService keycloakService;
 
     public LabService(final LabRepository labRepository,
-                      final LabRequestRepository labRequestRepository,final KeycloackService keycloackService) {
+                      final LabRequestRepository labRequestRepository,final KeycloakService keycloakService) {
         this.labRepository = labRepository;
         this.labRequestRepository = labRequestRepository;
-        this.keycloackService = keycloackService;
+        this.keycloakService = keycloakService;
     }
 
     public List<LabDTO> findAll() {
@@ -47,7 +47,7 @@ public class LabService {
     public Long create(final LabDTO labDTO) {
         final Lab lab = new Lab();
         mapToEntity(labDTO, lab);
-        keycloackService.createLabInKeycloak(labDTO);
+//        keycloakService.createLabInKeycloak(labDTO);
 
         return labRepository.save(lab).getId();
     }
@@ -56,20 +56,21 @@ public class LabService {
         final Lab lab = labRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(labDTO, lab);
-        KeycloackService.updateLabInKeycloak(labDTO);
+        KeycloakService.updateLabInKeycloak(labDTO);
         labRepository.save(lab);
         return ("Lab updated successfully");
     }
 
-    public void delete(final Long id) {
+    public Boolean delete(final Long id) {
         labRepository.deleteById(id);
-        keycloackService.deleteLabInKeycloak(get(id));
+        LabDTO labDTO = get(id);
+        return  keycloakService.deleteEntityKeycloak(labDTO.getEmail());
 
     }
     public void resetLabPassword(final Long id, final String tempPassword) {
         final Lab lab = labRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        keycloackService.resetLabPassword(id,tempPassword);
+//        keycloakService.resetLabPassword(id,tempPassword);
     }
 
     private LabDTO mapToDTO(final Lab lab, final LabDTO labDTO) {

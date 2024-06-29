@@ -4,7 +4,7 @@ import io.bootify.health_hive.model.UserLoginDTO;
 import io.bootify.health_hive.domain.User;
 import io.bootify.health_hive.model.UserDTO;
 import io.bootify.health_hive.repos.UserRepository;
-import io.bootify.health_hive.service.KeycloackService;
+import io.bootify.health_hive.service.KeycloakService;
 import io.bootify.health_hive.service.UserService;
 import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedException;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserResource {
 
     private final UserService userService;
-    private final  KeycloackService keycloakService;
+    private final  KeycloakService keycloakService;
     private final UserRepository userRepository;
 
 
-    public UserResource(final UserService userService, final KeycloackService keycloakService, final UserRepository userRepository) {
+    public UserResource(final UserService userService, final KeycloakService keycloakService, final UserRepository userRepository) {
         this.userService = userService;
         this.keycloakService = keycloakService;
         this.userRepository = userRepository;
@@ -56,10 +56,10 @@ public class UserResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
-        final Long createdId = userService.create(userDTO);
-        final String KeycloakUser = keycloakService.createUserInKeycloak(userDTO);
+//        final Long createdId = userService.create(userDTO);
+        final String KeycloakUser = keycloakService.addUser(userDTO);
         System.out.println(KeycloakUser);
-        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

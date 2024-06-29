@@ -15,7 +15,7 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import io.bootify.health_hive.service.KeycloackService;
+import io.bootify.health_hive.service.KeycloakService;
 
 
 @Service
@@ -25,18 +25,18 @@ public class UserService {
     private final LabRequestRepository labRequestRepository;
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final LabReportShareRepository labReportShareRepository;
-    private final KeycloackService keycloackService;
+    private final KeycloakService keycloakService;
 
     public UserService(final UserRepository userRepository,
                        final LabRequestRepository labRequestRepository,
                        final DataUploadRequestRepository dataUploadReqeustRepository,
                        final LabReportShareRepository labReportShareRepository,
-                       final KeycloackService keycloackService) {
+                       final KeycloakService keycloakService) {
         this.userRepository = userRepository;
         this.labRequestRepository = labRequestRepository;
         this.dataUploadRequestRepository = dataUploadReqeustRepository;
         this.labReportShareRepository = labReportShareRepository;
-        this.keycloackService = keycloackService;
+        this.keycloakService = keycloakService;
     }
 
     public List<UserDTO> findAll() {
@@ -74,7 +74,7 @@ public class UserService {
 
     public ResponseEntity<Void> resetPassword(final Long id, final String tempPassword) {
         final UserDTO userDTO = get(id);
-        keycloackService.resetUserPassword(userDTO, tempPassword);
+//        keycloakService.resetUserPassword(userDTO, tempPassword);
         return ResponseEntity.ok().build();
     }
 

@@ -93,6 +93,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/ipfs/upload").hasAnyRole(USER,LAB)
                         .requestMatchers(HttpMethod.GET, "/api/ipfs/**").hasRole(USER)
 
+                       //Daily tip
+                          .requestMatchers(HttpMethod.GET, "/api/dailyTips**").hasAnyRole(USER,ADMIN)
+                            .requestMatchers(HttpMethod.POST, "/api/dailyTips**").hasRole(ADMIN)
+                            .requestMatchers(HttpMethod.PUT, "/api/dailyTips**").hasRole(ADMIN)
+                            .requestMatchers(HttpMethod.DELETE, "/api/dailyTips**").hasRole(ADMIN)
+
                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/**").permitAll()
                         .anyRequest().hasRole(USER));
 

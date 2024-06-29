@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-  mysql-hh:
-    container_name: mysql-hh
-    image: mysql
-    environment:
-      - MYSQL_DATABASE=Health-Hive
-      - MYSQL_ROOT_PASSWORD=Password
-    ports:
-      - 3307:3306
-    volumes:
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
-      - mysql_data:/var/lib/mysql
+#  mysql-hh:
+#    container_name: mysql-hh
+#    image: mysql
+#    environment:
+#      - MYSQL_DATABASE=Health-Hive
+#      - MYSQL_ROOT_PASSWORD=Password
+#    ports:
+#      - 3307:3306
+#    volumes:
+#      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
+#      - mysql_data:/var/lib/mysql
 
 
 #  keycloak-hh:
