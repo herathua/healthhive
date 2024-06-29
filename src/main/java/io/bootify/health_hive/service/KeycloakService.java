@@ -6,6 +6,7 @@ import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +24,6 @@ public class KeycloakService {
     private static final String SERVER_URL = "https://lemur-6.cloud-iam.com/auth";
     private static final String REALM = "teamnova";
     private static final String CLIENT_ID = "Health-Hive-Client";
-//    private static final String CLIENT_SECRET = "FXMsXGV3fPjmgRCQ3P56A6opOoCX9Xyn";
     private static final String ADMIN_USERNAME = "chamikasandun3131@gmail.com";
     private static final String ADMIN_PASSWORD = "12345";
 
@@ -41,8 +42,9 @@ public class KeycloakService {
     }
 
     public String addUser(UserDTO userDTO) {
-            try {
         Keycloak keycloak = keycloak();
+
+        try {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userDTO.getEmail());
         user.setFirstName(userDTO.getFullName());
@@ -56,18 +58,18 @@ public class KeycloakService {
             log.error("Failed to create user: {}", response.getStatusInfo());
             return null;
         }
-
         String userId = CreatedResponseUtil.getCreatedId(response);
+                try {
 
-        String temporaryPassword = generateTemporaryPassword(userDTO);
+                    System.out.println("User ID: " + userId);
+                    UserResource userResource = keycloak.realm(REALM).users().get(userId);
 
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setTemporary(true);
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(temporaryPassword);
+                    userResource.executeActionsEmail(Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
 
-        keycloak.realm(REALM).users().get(userId).resetPassword(credential);
-
+                } catch (Exception e) {
+                    log.error("Failed to send email to user: {}", userDTO.getEmail(), e);
+                    throw new RuntimeException("Failed to send email to user", e);
+                }
         String userGroupId = "11581079-4efe-4f76-9133-5a55bc5a174e";
 
         try {
@@ -75,19 +77,20 @@ public class KeycloakService {
         }catch (Exception e) {
             log.error("Failed to add user to group: {}", userGroupId, e);
         }
-        keycloak.close();
-
-        log.info("User created successfully: {}, Temporary password: {}", userDTO.getEmail(), temporaryPassword);
-        return temporaryPassword;
-    }
+        return String.format("User created successfully: %s", userDTO.getEmail());    }
     catch (Exception e) {
         log.error("Failed to create user: {}", userDTO.getEmail(), e);
         throw new RuntimeException("Failed to create user", e);
     }
+    finally {
+            keycloak.close();
+        }
     }
+
     public String addLab(LabDTO labDTO) {
+        Keycloak keycloak = keycloak();
+
         try {
-            Keycloak keycloak = keycloak();
             UserRepresentation user = new UserRepresentation();
             user.setUsername(labDTO.getEmail());
             user.setFirstName(labDTO.getLabName());
@@ -101,38 +104,39 @@ public class KeycloakService {
                 return null;
             }
 
-            String userId = CreatedResponseUtil.getCreatedId(response);
+            String labId = CreatedResponseUtil.getCreatedId(response);
 
-            String temporaryPassword = generateTemporaryPassword(labDTO);
+            try {
 
-            CredentialRepresentation credential = new CredentialRepresentation();
-            credential.setTemporary(true);
-            credential.setType(CredentialRepresentation.PASSWORD);
-            credential.setValue(temporaryPassword);
+                System.out.println("User ID: " + labId);
+                UserResource userResource = keycloak.realm(REALM).users().get(labId);
 
-            keycloak.realm(REALM).users().get(userId).resetPassword(credential);
+                userResource.executeActionsEmail(Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+
+            } catch (Exception e) {
+                log.error("Failed to send email to user: {}", labDTO.getEmail(), e);
+                throw new RuntimeException("Failed to send email to user", e);
+            }
 
             String labGroupId = "2e3b228c-8c89-4c93-8560-b0bcc453865b";
 
             try {
-                keycloak.realm(REALM).users().get(userId).joinGroup(labGroupId);
+                keycloak.realm(REALM).users().get(labId).joinGroup(labGroupId);
             }catch (Exception e) {
                 log.error("Failed to add user to group: {}", labGroupId, e);
+                throw new RuntimeException("Failed to add user to group", e);
             }
-            keycloak.close();
 
-            log.info("User created successfully: {}, Temporary password: {}", labDTO.getEmail(), temporaryPassword);
-            return temporaryPassword;
+            log.info("User created successfully: {},", labDTO.getEmail());
+            return String.format("User created successfully: %s", labDTO.getEmail());
         }
         catch (Exception e) {
             log.error("Failed to create user: {}", labDTO.getEmail(), e);
             throw new RuntimeException("Failed to create user", e);
         }
-    }
-
-    private String generateTemporaryPassword(UserDTO userDTO) {
-        String preName = userDTO.getFullName().substring(0, Math.min(userDTO.getFullName().length(), 3));
-        return preName + userDTO.getBirthCertificateNumber();
+        finally{
+            keycloak.close();
+        }
     }
 
     private String generateTemporaryPassword(LabDTO labDTO) {
@@ -150,14 +154,11 @@ public class KeycloakService {
 
         Keycloak keycloak = keycloak();
         try {
-            // Search for the user by email
             List<UserRepresentation> users = keycloak.realm(REALM).users().search(userEmail);
 
             if (users != null && !users.isEmpty()) {
-                // Get the user ID
                 String userId = users.get(0).getId();
 
-                // Delete the user by ID
                 keycloak.realm(REALM).users().get(userId).remove();
                 log.info("Lab user deleted successfully: {}", userEmail);
                 return true;

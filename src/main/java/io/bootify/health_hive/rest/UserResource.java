@@ -39,7 +39,6 @@ public class UserResource {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @RolesAllowed("Labrole")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(userService.get(id));
@@ -56,25 +55,11 @@ public class UserResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
-//        final Long createdId = userService.create(userDTO);
-        final String KeycloakUser = keycloakService.addUser(userDTO);
-        System.out.println(KeycloakUser);
+//        userService.create(userDTO);
+        keycloakService.addUser(userDTO);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?>  login(@RequestBody UserLoginDTO userLoginDTO) {
-
-        return null;
-    }
-    @PutMapping("/{id}/reset-password")
-    public ResponseEntity<Void> resetUserPassword(@PathVariable Long id, @RequestBody String tempPassword) {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setId(id);
-//        keycloakService.resetUserPassword(userDTO, tempPassword);
-//       return ResponseEntity.ok().build();
-        return userService.resetPassword(id, tempPassword);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateUser(@PathVariable(name = "id") final Long id,
@@ -84,9 +69,14 @@ public class UserResource {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{email}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "email") final String email) {
+        boolean keycloakUser = keycloakService.deleteEntityKeycloak(email);
+        if (!keycloakUser) {
+            throw new NotFoundException();
+        }
+        long id = userRepository.findByEmail(email).getId();
         final ReferencedWarning referencedWarning = userService.getReferencedWarning(id);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

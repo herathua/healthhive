@@ -72,11 +72,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public ResponseEntity<Void> resetPassword(final Long id, final String tempPassword) {
-        final UserDTO userDTO = get(id);
-//        keycloakService.resetUserPassword(userDTO, tempPassword);
-        return ResponseEntity.ok().build();
-    }
+
 
     private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
         userDTO.setId(user.getId());
