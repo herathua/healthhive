@@ -13,7 +13,7 @@ public class IPFSConfig {
     public IPFS ipfs;
 
     public IPFSConfig() {
-        ipfs = new IPFS("/ip4/127.0.0.1/tcp/5001");
+        ipfs = new IPFS("/ip4/13.202.67.81/tcp/5001");
     }
 
 }

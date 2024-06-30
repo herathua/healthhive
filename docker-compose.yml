@@ -14,7 +14,7 @@ services:
 #      - mysql_data:/var/lib/mysql
 
 
-#  keycloak-hh:
+#  keycloak-hh:t
 #    container_name: keycloak-hh
 #    image: quay.io/keycloak/keycloak:22.0.1
 #    command:
@@ -79,45 +79,44 @@ services:
     ports:
       - "3001:3000"
 
-  ipfs0:
-    container_name: ipfs0
-    image: ipfs/kubo:release
-    ports:
-      - "4001:4001"
-      - "5001:5001"
-    volumes:
-      - ./docker/ipfs0:/data/ipfs
+#  ipfs0:
+#    container_name: ipfs0
+#    image: ipfs/kubo:release
+#    ports:
+#      - "4001:4001"
+#      - "5001:5001"
+#    volumes:
+#      - ./docker/ipfs0:/data/ipfs
 
-  cluster0:
-    container_name: cluster0
-    image: ipfs/ipfs-cluster:latest
-    depends_on:
-      - ipfs0
-    environment:
-      CLUSTER_PEERNAME: cluster0
-      CLUSTER_SECRET: ${CLUSTER_SECRET}
-      CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs0/tcp/5001
-      CLUSTER_CRDT_TRUSTEDPEERS: '*'
-      CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094
-      CLUSTER_MONITORPINGINTERVAL: 2s
-    ports:
-      - "127.0.0.1:9094:9094"
-      - "9095:9095"
-      - "9096:9096"
-    volumes:
-      - ./docker/cluster0:/data/ipfs-cluster
+#  cluster0:
+#    container_name: cluster0
+#    image: ipfs/ipfs-cluster:latest
+#    depends_on:
+#      - ipfs0
+#    environment:
+#      CLUSTER_PEERNAME: cluster0
+#      CLUSTER_SECRET: ${CLUSTER_SECRET}
+#      CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs0/tcp/5001
+#      CLUSTER_CRDT_TRUSTEDPEERS: '*'
+#      CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094
+#      CLUSTER_MONITORPINGINTERVAL: 2s
+#    ports:
+#      - "127.0.0.1:9094:9094"
+#      - "9095:9095"
+#      - "9096:9096"
+#    volumes:
+#      - ./docker/cluster0:/data/ipfs-cluster
 
-  ganache:
-    container_name: ganache-hh
-    image: trufflesuite/ganache-cli:latest
-    command: [ "--db", "/ganache_data", "--mnemonic", "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat", "--chainId", "1337" ]
-    ports:
-      - "8545:8545"
-    volumes:
-      - ./docker/ganache_data:/ganache_data
+#  ganache:
+#    container_name: ganache-hh
+#    image: trufflesuite/ganache-cli:latest
+#    command: [ "--db", "/ganache_data", "--mnemonic", "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat", "--chainId", "1337" ]
+#    ports:
+#      - "8545:8545"
+#    volumes:
+#      - ./docker/ganache_data:/ganache_data
 
 volumes:
-
   mysql_data:
 
 
