@@ -14,8 +14,7 @@ public class FileDTO {
 
     @NotNull
     private String type;
-
-
+    
     private String filePath;
     private String fileHash;
 
