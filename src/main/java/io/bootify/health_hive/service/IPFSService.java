@@ -1,58 +1,45 @@
 package io.bootify.health_hive.service;
 
-import io.bootify.health_hive.config.IPFSConfig;
+import io.bootify.health_hive.config.PinataClient;
 import io.bootify.health_hive.repos.FileServiceImpl;
-import io.ipfs.api.IPFS;
-import io.ipfs.api.MerkleNode;
-import io.ipfs.api.NamedStreamable;
-import io.ipfs.multihash.Multihash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Service
 public class IPFSService implements FileServiceImpl {
 
     @Autowired
-    IPFSConfig ipfsConfig;
-
-
+    private PinataClient pinataClient;
 
     @Override
     public String saveFile(MultipartFile file) {
-
         try {
+            // Convert MultipartFile to File
+            File convFile = new File(file.getOriginalFilename());
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
 
-            InputStream inputStream = new ByteArrayInputStream(file.getBytes());
-            IPFS ipfs = ipfsConfig.ipfs;
+            // Use PinataClient to pin the file
+            String hash = pinataClient.pinFileToIPFS(convFile);
+            System.out.println("IPFS Hash: " + hash);
 
-            NamedStreamable.InputStreamWrapper is = new NamedStreamable.InputStreamWrapper(inputStream);
-            MerkleNode response = ipfs.add(is).get(0);
-            System.out.println("Hash (base 58): " + response.name.get() + " - " + response.hash.toBase58());
-            return response.hash.toBase58();
+            // Delete the temporary file
+            convFile.delete();
 
+            return hash;
         } catch (IOException ex) {
-            throw new RuntimeException("Error whilst communicating with the IPFS node", ex);
+            throw new RuntimeException("Error whilst communicating with Pinata Cloud", ex);
         }
-
     }
 
     @Override
     public byte[] loadFile(String hash) {
-        try {
-
-            IPFS ipfs = ipfsConfig.ipfs;
-            Multihash filePointer = Multihash.fromBase58(hash);
-
-            return ipfs.cat(filePointer);
-        } catch (IOException ex) {
-            throw new RuntimeException("Error whilst communicating with the IPFS node", ex);
-        }
+        throw new UnsupportedOperationException("Retrieving files from IPFS via Pinata is not implemented");
     }
-
 }
