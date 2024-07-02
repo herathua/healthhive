@@ -1,8 +1,122 @@
+version: '3.8'
+
 services:
-  mysql:
-    image: mysql:8.3
+#  mysql-hh:
+#    container_name: mysql-hh
+#    image: mysql
+#    environment:
+#      - MYSQL_DATABASE=Health-Hive
+#      - MYSQL_ROOT_PASSWORD=Password
+#    ports:
+#      - 3307:3306
+#    volumes:
+#      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
+#      - mysql_data:/var/lib/mysql
+
+
+#  keycloak-hh:t
+#    container_name: keycloak-hh
+#    image: quay.io/keycloak/keycloak:22.0.1
+#    command:
+#      - "start-dev"
+#      - "--hostname-port=8080"
+#    environment:
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#      KC_HOSTNAME: keycloak-hh
+#      KC_DB: mysql
+#      KC_DB_URL_HOST: mysql-hh
+#      KC_DB_URL_DATABASE: keycloak
+#      KC_DB_USERNAME: root
+#      KC_DB_PASSWORD: Password
+#      KC_HEALTH_ENABLED: true
+#      KC_METRICS_ENABLED: true
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mysql-hh
+
+#  mysql-hp-exporter:
+#    container_name: mysql-hh-exporter
+#    image: quay.io/prometheus/mysqld-exporter
+#    command:
+#      - "--mysqld.username=root:Password"
+#      - "--mysqld.address=mysql-hp:3307"
+#    ports:
+#      - '9104:9104'
+#    depends_on:
+#      - mysql-hh
+
+#  prometheus:
+#    image: prom/prometheus
+#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+#    command:
+#      - --enable-feature=exemplar-storage
+#      - --config.file=/etc/prometheus/prometheus.yml
+#    volumes:
+#      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+#      - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
+#    ports:
+#      - "9090:9090"
+#    depends_on:
+#      - mysql-hp-exporter
+#      - keycloak-hh
+
+
+
+
+
+  grafana:
+    image: grafana/grafana
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    volumes:
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
     environment:
-    - MYSQL_DATABASE=Health-Hivw
-    - MYSQL_ROOT_PASSWORD=P4ssword!
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
-    - 3307:3306
+      - "3001:3000"
+
+#  ipfs0:
+#    container_name: ipfs0
+#    image: ipfs/kubo:release
+#    ports:
+#      - "4001:4001"
+#      - "5001:5001"
+#    volumes:
+#      - ./docker/ipfs0:/data/ipfs
+
+#  cluster0:
+#    container_name: cluster0
+#    image: ipfs/ipfs-cluster:latest
+#    depends_on:
+#      - ipfs0
+#    environment:
+#      CLUSTER_PEERNAME: cluster0
+#      CLUSTER_SECRET: ${CLUSTER_SECRET}
+#      CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs0/tcp/5001
+#      CLUSTER_CRDT_TRUSTEDPEERS: '*'
+#      CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094
+#      CLUSTER_MONITORPINGINTERVAL: 2s
+#    ports:
+#      - "127.0.0.1:9094:9094"
+#      - "9095:9095"
+#      - "9096:9096"
+#    volumes:
+#      - ./docker/cluster0:/data/ipfs-cluster
+
+#  ganache:
+#    container_name: ganache-hh
+#    image: trufflesuite/ganache-cli:latest
+#    command: [ "--db", "/ganache_data", "--mnemonic", "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat", "--chainId", "1337" ]
+#    ports:
+#      - "8545:8545"
+#    volumes:
+#      - ./docker/ganache_data:/ganache_data
+
+volumes:
+  mysql_data:
+
+

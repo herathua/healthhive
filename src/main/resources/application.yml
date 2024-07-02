@@ -1,12 +1,26 @@
 spring:
+  cors:
+    allowed-origins: "chrome-extension://pfdhoblngboilpfeibdedpjgfnlcodoo"
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/Health-Hivw?serverTimezone=UTC}
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://13.202.67.81:3307/Health-Hive?serverTimezone=UTC}
     username: ${JDBC_DATABASE_USERNAME:root}
-    password: ${JDBC_DATABASE_PASSWORD:<<YOUR_PASSWORD>>}
+    password: ${JDBC_DATABASE_PASSWORD:Password}
     dbcp2:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
       validation-query-timeout: 30
+
+#   security
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://lemur-6.cloud-iam.com/auth/realms/teamnova
+          jwk-set-uri: https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/certs
+
+
+
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,7 +35,20 @@ spring:
   docker:
     compose:
       lifecycle-management: start-only
-error:
+
+jwt:
+  auth:
+    converter:
+      resource-id : Health-Hive-Client
+      principal-attribute: principal_username
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
   handling:
     http-status-in-json-response: true
     exception-logging: NO_LOGGING
@@ -34,5 +61,21 @@ error:
       LabRequestLabUnique: LAB_REQUEST_LAB_UNIQUE
       LabReportSharePatientUnique: LAB_REPORT_SHARE_PATIENT_UNIQUE
       LabReportShareDoctorUnique: LAB_REPORT_SHARE_DOCTOR_UNIQUE
+
 springdoc:
   pathsToMatch: /api/**
+
+server:
+  port: 33000
+
+file:
+  upload-dir: C:\Users\uvher\OneDrive\Documents\HealthHiveBackend\healthhive\src\test\resources
+
+#logging:
+#  level:
+#    org.springframework.web: DEBUG
+#    org.hibernate: DEBUG
+#    org.springframework.web.cors: DEBUG
+#temp
+
+

@@ -5,6 +5,11 @@ target/
 !**/src/test/**/target/
 application-local.yml
 *.log
+docker/ipfs0
+docker/cluster0
+docker/mysql
+docker/grafana
+
 
 ## IntelliJ IDEA
 .idea
