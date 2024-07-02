@@ -55,14 +55,14 @@ public class FileResource {
     public ResponseEntity<Long> createFile(@RequestBody @Valid final FileDTO fileDTO) throws Exception {
 
 
-//        final Long createdId = fileService.create(fileDTO);
-        final String txId = stringStorageService.storeString(fileDTO.getFileHash());
+        final Long createdId = fileService.create(fileDTO);
+//        final String txId = stringStorageService.storeString(fileDTO.getFileHash());
         try{
-            return null;
-//            return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+//            return null;
+            return new ResponseEntity<>(createdId, HttpStatus.CREATED);
         }catch (Exception e){
-//            return new ResponseEntity<>(createdId, HttpStatus.INTERNAL_SERVER_ERROR);
-            return null;
+            return new ResponseEntity<>(createdId, HttpStatus.INTERNAL_SERVER_ERROR);
+//            return null;
         }
     }
 

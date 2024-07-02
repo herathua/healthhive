@@ -2,9 +2,9 @@ spring:
   cors:
     allowed-origins: "chrome-extension://pfdhoblngboilpfeibdedpjgfnlcodoo"
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:mysql://13.202.67.81:3307/Health-Hive?serverTimezone=UTC}
-    username: ${JDBC_DATABASE_USERNAME:root}
-    password: ${JDBC_DATABASE_PASSWORD:Password}
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://healthhive.cpceyykqk0vx.ap-south-1.rds.amazonaws.com:3306/Health-Hive?serverTimezone=UTC}
+    username: ${JDBC_DATABASE_USERNAME:admin}
+    password: ${JDBC_DATABASE_PASSWORD:health_hiveadmin}
     dbcp2:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
@@ -32,9 +32,9 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
-  docker:
-    compose:
-      lifecycle-management: start-only
+#  docker:
+#    compose:
+#      lifecycle-management: start-only
 
 jwt:
   auth:

@@ -17,7 +17,7 @@ public class ScheduledTasks {
         this.shareFileService = shareFileService;
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 3000000)
     public void performTask() {
         System.out.println("Performing scheduled task" + LocalDateTime.now());
         try {
