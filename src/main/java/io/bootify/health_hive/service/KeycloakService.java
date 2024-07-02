@@ -59,17 +59,7 @@ public class KeycloakService {
             return null;
         }
         String userId = CreatedResponseUtil.getCreatedId(response);
-                try {
 
-                    System.out.println("User ID: " + userId);
-                    UserResource userResource = keycloak.realm(REALM).users().get(userId);
-
-                    userResource.executeActionsEmail(Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
-
-                } catch (Exception e) {
-                    log.error("Failed to send email to user: {}", userDTO.getEmail(), e);
-                    throw new RuntimeException("Failed to send email to user", e);
-                }
         String userGroupId = "11581079-4efe-4f76-9133-5a55bc5a174e";
 
         try {
@@ -106,17 +96,7 @@ public class KeycloakService {
 
             String labId = CreatedResponseUtil.getCreatedId(response);
 
-            try {
 
-                System.out.println("User ID: " + labId);
-                UserResource userResource = keycloak.realm(REALM).users().get(labId);
-
-                userResource.executeActionsEmail(Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
-
-            } catch (Exception e) {
-                log.error("Failed to send email to user: {}", labDTO.getEmail(), e);
-                throw new RuntimeException("Failed to send email to user", e);
-            }
 
             String labGroupId = "2e3b228c-8c89-4c93-8560-b0bcc453865b";
 
