@@ -7,7 +7,6 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 import jakarta.ws.rs.core.Response;
@@ -249,30 +248,78 @@ public class KeycloakService {
     }
 
     public void deleteUserInKeycloak(String email) {
-            Keycloak keycloak = keycloak();
-            try {
-                // Search for the user by email
-                List<UserRepresentation> users = keycloak.realm(REALM).users().search(email);
+        Keycloak keycloak = keycloak();
+        try {
+            // Search for the user by email
+            List<UserRepresentation> users = keycloak.realm(REALM).users().search(email);
 
-                if (users != null && !users.isEmpty()) {
-                    // Get the user ID
-                    String userId = users.get(0).getId();
+            if (users != null && !users.isEmpty()) {
+                // Get the user ID
+                String userId = users.get(0).getId();
 
-                    // Delete the user by ID
-                    Response response = keycloak.realm(REALM).users().delete(userId);
-                    if (response.getStatus() == 204) {
-                        log.info("User deleted successfully: {}", email);
-                    } else {
-                        log.warn("Failed to delete user. Response status: {}", response.getStatus());
-                    }
+                // Delete the user by ID
+                Response response = keycloak.realm(REALM).users().delete(userId);
+                if (response.getStatus() == 204) {
+                    log.info("User deleted successfully: {}", email);
                 } else {
-                    log.warn("User with email {} not found.", email);
+                    log.warn("Failed to delete user. Response status: {}", response.getStatus());
                 }
-            } catch (Exception e) {
-                log.error("Failed to delete user: {}", email, e);
-                throw new RuntimeException("Failed to delete user", e);
-            } finally {
-                keycloak.close();
+            } else {
+                log.warn("User with email {} not found.", email);
             }
+        } catch (Exception e) {
+            log.error("Failed to delete user: {}", email, e);
+            throw new RuntimeException("Failed to delete user", e);
+        } finally {
+            keycloak.close();
         }
+    }
+
+    // New method to edit user details
+    public boolean editUserDetails(UserDTO userDTO) {
+        Keycloak keycloak = keycloak();
+        try {
+            List<UserRepresentation> users = keycloak.realm(REALM).users().search(userDTO.getEmail());
+            if (users != null && !users.isEmpty()) {
+                UserRepresentation user = users.get(0);
+                user.setFirstName(userDTO.getFullName());
+                user.setEmail(userDTO.getEmail());
+                keycloak.realm(REALM).users().get(user.getId()).update(user);
+                log.info("User details updated successfully: {}", userDTO.getEmail());
+                return true;
+            } else {
+                log.warn("User with email {} not found.", userDTO.getEmail());
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("Failed to update user details: {}", userDTO.getEmail(), e);
+            throw new RuntimeException("Failed to update user details", e);
+        } finally {
+            keycloak.close();
+        }
+    }
+
+    // New method to edit lab details
+    public boolean editLabDetails(LabDTO labDTO) {
+        Keycloak keycloak = keycloak();
+        try {
+            List<UserRepresentation> users = keycloak.realm(REALM).users().search(labDTO.getEmail());
+            if (users != null && !users.isEmpty()) {
+                UserRepresentation user = users.get(0);
+                user.setFirstName(labDTO.getLabName());
+                user.setEmail(labDTO.getEmail());
+                keycloak.realm(REALM).users().get(user.getId()).update(user);
+                log.info("Lab details updated successfully: {}", labDTO.getEmail());
+                return true;
+            } else {
+                log.warn("Lab user with email {} not found.", labDTO.getEmail());
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("Failed to update lab details: {}", labDTO.getEmail(), e);
+            throw new RuntimeException("Failed to update lab details", e);
+        } finally {
+            keycloak.close();
+        }
+    }
 }

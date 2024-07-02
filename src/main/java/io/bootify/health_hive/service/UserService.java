@@ -11,12 +11,11 @@ import io.bootify.health_hive.repos.LabRequestRepository;
 import io.bootify.health_hive.repos.UserRepository;
 import io.bootify.health_hive.util.NotFoundException;
 import io.bootify.health_hive.util.ReferencedWarning;
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import io.bootify.health_hive.service.KeycloakService;
 
+import java.util.List;
 
 @Service
 public class UserService {
@@ -25,18 +24,18 @@ public class UserService {
     private final LabRequestRepository labRequestRepository;
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final LabReportShareRepository labReportShareRepository;
-    private final KeycloakService keycloackService;
+    private final KeycloakService keycloakService;
 
     public UserService(final UserRepository userRepository,
                        final LabRequestRepository labRequestRepository,
-                       final DataUploadRequestRepository dataUploadReqeustRepository,
+                       final DataUploadRequestRepository dataUploadRequestRepository,
                        final LabReportShareRepository labReportShareRepository,
-                       final KeycloakService keycloackService) {
+                       final KeycloakService keycloakService) {
         this.userRepository = userRepository;
         this.labRequestRepository = labRequestRepository;
-        this.dataUploadRequestRepository = dataUploadReqeustRepository;
+        this.dataUploadRequestRepository = dataUploadRequestRepository;
         this.labReportShareRepository = labReportShareRepository;
-        this.keycloackService = keycloackService;
+        this.keycloakService = keycloakService;
     }
 
     public List<UserDTO> findAll() {
@@ -52,12 +51,11 @@ public class UserService {
                 .orElseThrow(NotFoundException::new);
     }
 
-
     public Long create(final UserDTO userDTO) {
         final User user = new User();
         mapToEntity(userDTO, user);
-         String msg = keycloackService.addUser(userDTO);
-//        System.out.println("\n\keycloak message: " + msg + "\n\n");
+        String msg = keycloakService.addUser(userDTO);
+        // System.out.println("\n\keycloak message: " + msg + "\n\n");
         return userRepository.save(user).getId();
     }
 
@@ -66,15 +64,18 @@ public class UserService {
                 .orElseThrow(NotFoundException::new);
         mapToEntity(userDTO, user);
         userRepository.save(user);
+        keycloakService.editUserDetails(userDTO); // Update user details in Keycloak
     }
 
     public void delete(final Long id) {
+        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
         userRepository.deleteById(id);
+        keycloakService.deleteUserInKeycloak(user.getEmail()); // Delete user in Keycloak
     }
 
     public ResponseEntity<Void> resetPassword(final Long id, final String tempPassword) {
         final UserDTO userDTO = get(id);
-        keycloackService.resetUserPassword(userDTO, tempPassword);
+        keycloakService.resetUserPassword(userDTO, tempPassword);
         return ResponseEntity.ok().build();
     }
 
@@ -125,10 +126,10 @@ public class UserService {
             referencedWarning.addParam(userLabRequest.getId());
             return referencedWarning;
         }
-        final DataUploadRequest userDataUploadReqeust = dataUploadRequestRepository.findFirstByUser(user);
-        if (userDataUploadReqeust != null) {
-            referencedWarning.setKey("user.dataUploadReqeust.user.referenced");
-            referencedWarning.addParam(userDataUploadReqeust.getId());
+        final DataUploadRequest userDataUploadRequest = dataUploadRequestRepository.findFirstByUser(user);
+        if (userDataUploadRequest != null) {
+            referencedWarning.setKey("user.dataUploadRequest.user.referenced");
+            referencedWarning.addParam(userDataUploadRequest.getId());
             return referencedWarning;
         }
         final LabReportShare patientLabReportShare = labReportShareRepository.findFirstByPatient(user);
@@ -145,5 +146,4 @@ public class UserService {
         }
         return null;
     }
-
 }

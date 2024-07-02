@@ -36,7 +36,7 @@ public class LabResource {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<LabDTO> findAllByLabId(@PathVariable String email) {
-        return ResponseEntity.ok( labService.findByEmail(email));
+        return ResponseEntity.ok(labService.findByEmail(email));
     }
 
     @PostMapping
@@ -47,11 +47,10 @@ public class LabResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?>  login (@RequestBody LabLoginDTO labLoginDTO) {
-
+    public ResponseEntity<?> login(@RequestBody LabLoginDTO labLoginDTO) {
+        // Implement login functionality as needed
         return null;
     }
-
 
     @PutMapping("/labs/{id}/reset-password")
     public void resetLabPassword(@PathVariable Long id, @RequestParam String tempPassword) {
@@ -60,7 +59,7 @@ public class LabResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateLab(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final LabDTO labDTO) {
+                                          @RequestBody @Valid final LabDTO labDTO) {
         labService.update(id, labDTO);
         return ResponseEntity.ok(id);
     }
@@ -76,4 +75,10 @@ public class LabResource {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Long> editLabDetails(@PathVariable(name = "id") final Long id,
+                                               @RequestBody @Valid final LabDTO labDTO) {
+        labService.update(id, labDTO);
+        return ResponseEntity.ok(id);
+    }
 }

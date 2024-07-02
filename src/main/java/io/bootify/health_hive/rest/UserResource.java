@@ -52,8 +52,6 @@ public class UserResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<String> createUser(@RequestBody final UserDTO userDTO) {
-//        final Long createdId = userService.create(userDTO);
-        System.out.println("this is some text");
         final String tempPassword = keycloakService.addUser(userDTO);
         System.out.println("Temporary Password: " + tempPassword);
         return new ResponseEntity<>(tempPassword, HttpStatus.CREATED);
@@ -88,8 +86,14 @@ public class UserResource {
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "email") final String email) {
         System.out.println("Api called");
-        keycloakService.deleteUserInKeycloak((email));
-        return null;
+        keycloakService.deleteUserInKeycloak(email);
+        return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Long> editUserDetails(@PathVariable(name = "id") final Long id,
+                                                @RequestBody @Valid final UserDTO userDTO) {
+        userService.update(id, userDTO);
+        return ResponseEntity.ok(id);
+    }
 }
