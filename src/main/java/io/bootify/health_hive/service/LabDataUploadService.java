@@ -24,7 +24,7 @@ public class LabDataUploadService {
 
 
     public LabDataUploadService(final LabDataUploadRepository labDataUploadRepository,
-            final LabRequestRepository labRequestRepository, final FileRepository fileRepository) {
+                                final LabRequestRepository labRequestRepository, final FileRepository fileRepository) {
         this.labDataUploadRepository = labDataUploadRepository;
         this.labRequestRepository = labRequestRepository;
         this.fileRepository = fileRepository;
@@ -66,6 +66,10 @@ public class LabDataUploadService {
         final LabDataUpload labDataUpload = labDataUploadRepository.findFirstByLabRequest(labRequestRepository.findById(labRequestId).orElseThrow(NotFoundException::new));
         return mapToDTO(labDataUpload, new LabDataUploadDTO());
     }
+    //findByLabRequestId
+    public List<LabDataUpload> getLabDataUploadsByLabRequestId(Long labRequestId) {
+        return labDataUploadRepository.findByLabRequestId(labRequestId);
+    }
 
     public byte[] getFileFromDatabase(LabDataUploadDTO labDataUploadDTO) {
         return null;
@@ -76,7 +80,7 @@ public class LabDataUploadService {
     }
 
     private LabDataUploadDTO mapToDTO(final LabDataUpload labDataUpload,
-            final LabDataUploadDTO labDataUploadDTO) {
+                                      final LabDataUploadDTO labDataUploadDTO) {
         labDataUploadDTO.setId(labDataUpload.getId());
         labDataUploadDTO.setDescription(labDataUpload.getDescription());
         labDataUploadDTO.setLabRequest(labDataUpload.getLabRequest() == null ? null : labDataUpload.getLabRequest().getId());
@@ -84,7 +88,7 @@ public class LabDataUploadService {
     }
 
     private LabDataUpload mapToEntity(final LabDataUploadDTO labDataUploadDTO,
-            final LabDataUpload labDataUpload) {
+                                      final LabDataUpload labDataUpload) {
         labDataUpload.setDescription(labDataUploadDTO.getDescription());
         final LabRequest labRequest = labDataUploadDTO.getLabRequest() == null ? null : labRequestRepository.findById(labDataUploadDTO.getLabRequest())
                 .orElseThrow(() -> new NotFoundException("labRequest not found"));
