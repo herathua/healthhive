@@ -78,7 +78,7 @@ public class SecurityConfig {
 //                .requestMatchers(HttpMethod.GET, "/api/ipfs/**").hasRole(USER)
 //                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/**").permitAll()
 //                .anyRequest().denyAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -17,7 +17,7 @@ public class StringStorageService {
     private final StringStorage stringStorage;
 
     public StringStorageService() {
-        Web3j web3j = Web3j.build(new HttpService("http://13.202.67.81:8545")); // URL of your Ethereum node
+        Web3j web3j = Web3j.build(new HttpService("http://ganache-hh:8545")); // URL of your Ethereum node
         Credentials credentials = Credentials.create("0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3"); // Wallet private key
 
         BigInteger gasPrice = BigInteger.valueOf(20_000_000_000L); // Custom gas price

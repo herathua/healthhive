@@ -1,7 +1,9 @@
 package io.bootify.health_hive.rest;
 
 import io.bootify.health_hive.model.NotesDTO;
+import io.bootify.health_hive.model.UserDTO;
 import io.bootify.health_hive.service.NotesService;
+import io.bootify.health_hive.repos.UserRepository;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotesResource {
 
     private final NotesService notesService;
+    private final UserRepository userRepository;
 
-    public NotesResource(final NotesService notesService) {
+    public NotesResource(final NotesService notesService,final UserRepository userRepository) {
         this.notesService = notesService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -37,6 +41,10 @@ public class NotesResource {
         return ResponseEntity.ok(notesService.get(id));
     }
 
+    @GetMapping("/userId/{userId}")
+    public ResponseEntity<List<NotesDTO>> getNotesByUserId(@PathVariable(name = "userId") final Long userId) {
+        return ResponseEntity.ok(notesService.findByUser(userId));
+    }
     @PostMapping
     public ResponseEntity<Long> createNotes(@RequestBody @Valid final NotesDTO notesDTO) {
         final Long createdId = notesService.create(notesDTO);

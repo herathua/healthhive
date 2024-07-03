@@ -70,4 +70,10 @@ public class NotesService {
         return notes;
     }
 
+    public List<NotesDTO> findByUser(Long userId) {
+        final List<Notes> noteses = notesRepository.findByUser_Id(userId);
+        return noteses.stream()
+                .map(notes -> mapToDTO(notes, new NotesDTO()))
+                .toList();
+    }
 }
