@@ -16,12 +16,12 @@ public class PinataController {
     @Autowired
     private PinataService pinataService;
 
-    @PostMapping(value = "/pinata/upload")
+    @PostMapping(value = "/ipfs/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         return pinataService.saveFile(file);
     }
 
-    @GetMapping(value = "/pinata/{hash}")
+    @GetMapping(value = "/ipfs/{hash}")
     public ResponseEntity<byte[]> getFile(@PathVariable("hash") String hash) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-type", MediaType.ALL_VALUE);

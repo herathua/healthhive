@@ -40,9 +40,10 @@ public class LabService {
     }
 
     public LabDTO findByEmail(String email) {
-        return labRepository.findAllByEmail(email)
-                .map(lab -> mapToDTO(lab, new LabDTO()))
-                .orElseThrow(NotFoundException::new);
+//        return labRepository.findAllByEmail(email)
+//                .map(lab -> mapToDTO(lab, new LabDTO()))
+//                .orElseThrow(NotFoundException::new);
+        return null;
     }
 
     public Long create(final LabDTO labDTO) {
