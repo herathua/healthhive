@@ -65,7 +65,6 @@ public class HealthDataService {
         healthDataDTO.setDate(healthData.getDate());
         healthDataDTO.setWeight(healthData.getWeight());
         healthDataDTO.setHeight(healthData.getHeight());
-        healthDataDTO.setNotes(healthData.getNotes());
         healthDataDTO.setUser(healthData.getUser() == null ? null : healthData.getUser().getId());
         return healthDataDTO;
     }
@@ -74,7 +73,6 @@ public class HealthDataService {
         healthData.setDate(healthDataDTO.getDate());
         healthData.setWeight(healthDataDTO.getWeight());
         healthData.setHeight(healthDataDTO.getHeight());
-        healthData.setNotes(healthDataDTO.getNotes());
         final User user = healthDataDTO.getUser() == null ? null : userRepository.findById(healthDataDTO.getUser())
                 .orElseThrow(() -> new NotFoundException("user not found"));
         healthData.setUser(user);

@@ -18,7 +18,7 @@ public class HealthDataDTO {
     @Size(max = 3)
     private String height;
 
-    private String notes;
+
 
     private Long user;
 
@@ -54,13 +54,7 @@ public class HealthDataDTO {
         this.height = height;
     }
 
-    public String getNotes() {
-        return notes;
-    }
 
-    public void setNotes(final String notes) {
-        this.notes = notes;
-    }
 
     public Long getUser() {
         return user;
