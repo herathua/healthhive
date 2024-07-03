@@ -3,7 +3,6 @@ package io.bootify.health_hive.service;
 import io.bootify.health_hive.domain.Lab;
 import io.bootify.health_hive.domain.LabRequest;
 import io.bootify.health_hive.model.LabDTO;
-import io.bootify.health_hive.model.LabRequestDTO;
 import io.bootify.health_hive.repos.LabRepository;
 import io.bootify.health_hive.repos.LabRequestRepository;
 import io.bootify.health_hive.util.NotFoundException;
@@ -12,8 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Service
 public class LabService {
@@ -23,7 +20,7 @@ public class LabService {
     private final KeycloakService keycloakService;
 
     public LabService(final LabRepository labRepository,
-                      final LabRequestRepository labRequestRepository,final KeycloakService keycloakService) {
+                      final LabRequestRepository labRequestRepository, final KeycloakService keycloakService) {
         this.labRepository = labRepository;
         this.labRequestRepository = labRequestRepository;
         this.keycloakService = keycloakService;
@@ -42,13 +39,16 @@ public class LabService {
                 .orElseThrow(NotFoundException::new);
     }
 
-
+    public LabDTO findByEmail(String email) {
+        return labRepository.findAllByEmail(email)
+                .map(lab -> mapToDTO(lab, new LabDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
 
     public Long create(final LabDTO labDTO) {
         final Lab lab = new Lab();
         mapToEntity(labDTO, lab);
-//        keycloakService.createLabInKeycloak(labDTO);
-
+        keycloakService.createLabInKeycloak(labDTO);
         return labRepository.save(lab).getId();
     }
 
@@ -56,21 +56,21 @@ public class LabService {
         final Lab lab = labRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(labDTO, lab);
-        KeycloakService.updateLabInKeycloak(labDTO);
         labRepository.save(lab);
-        return ("Lab updated successfully");
+        keycloakService.editLabDetails(labDTO); // Update lab details in Keycloak
+        return "Lab updated successfully";
     }
 
-    public Boolean delete(final Long id) {
+    public void delete(final Long id) {
+        Lab lab = labRepository.findById(id).orElseThrow(NotFoundException::new);
         labRepository.deleteById(id);
-        LabDTO labDTO = get(id);
-        return  keycloakService.deleteEntityKeycloak(labDTO.getEmail());
-
+        keycloakService.deleteLabInKeycloak(lab.getEmail()); // Delete lab user in Keycloak
     }
+
     public void resetLabPassword(final Long id, final String tempPassword) {
         final Lab lab = labRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-//        keycloakService.resetLabPassword(id,tempPassword);
+        keycloakService.resetLabPassword(id, tempPassword);
     }
 
     private LabDTO mapToDTO(final Lab lab, final LabDTO labDTO) {
@@ -80,7 +80,6 @@ public class LabService {
         labDTO.setAddress(lab.getAddress());
         labDTO.setEmail(lab.getEmail());
         labDTO.setTelephone(lab.getTelephone());
-        labDTO.setLabProfilePictureUrl(lab.getLabProfilePictureUrl());
         return labDTO;
     }
 
@@ -90,7 +89,6 @@ public class LabService {
         lab.setAddress(labDTO.getAddress());
         lab.setEmail(labDTO.getEmail());
         lab.setTelephone(labDTO.getTelephone());
-        lab.setLabProfilePictureUrl(labDTO.getLabProfilePictureUrl());
         return lab;
     }
 
@@ -114,5 +112,4 @@ public class LabService {
         }
         return null;
     }
-
 }
