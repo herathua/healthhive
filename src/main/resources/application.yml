@@ -78,4 +78,8 @@ file:
 #    org.springframework.web.cors: DEBUG
 #temp
 
-
+pinata:
+  api:
+    key: 2989622d0628594d9906
+  secret:
+    key: 034e7d872a0755d32d65b2f94030ab9c2f6c4bb4566c1ea28435248bc08a292a
