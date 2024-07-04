@@ -10,6 +10,22 @@ spring:
       validation-query: /* ping */ select 1
       validation-query-timeout: 30
 
+  mail:
+    host: smtp.google.com
+    port: 587
+    username: teamnova.uom@gmail.com
+    password: vlvo oqsw jaau iwuy
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false  # Disable STARTTLS since SSL is used
+            required: false
+          ssl:
+            enable: true
+        debug: true
+
   #   security
   security:
     oauth2:
@@ -85,3 +101,4 @@ pinata:
     key: 96e90d2e114f33908c6c5573a8686224a7c93114e303122670ef629591a34d02
   jwt:
     secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIxYjc4YTVkMC1iMjZjLTRiZWYtODY4Mi0xNWI1OTg1NTk4YjMiLCJlbWFpbCI6InV2aGVyYXRoQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIxMDAxZDMzMTZhZjAyYzc4ZmYxNyIsInNjb3BlZEtleVNlY3JldCI6Ijk2ZTkwZDJlMTE0ZjMzOTA4YzZjNTU3M2E4Njg2MjI0YTdjOTMxMTRlMzAzMTIyNjcwZWY2Mjk1OTFhMzRkMDIiLCJleHAiOjE3NTE1MjQwNzR9.cYrTDYBpfz31So2oyhp2ub0EtOYXqbz-gCzoHy5M5Ws
+
