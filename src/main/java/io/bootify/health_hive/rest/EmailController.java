@@ -12,22 +12,46 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/send")
-    public String sendEmail(@RequestBody EmailRequest emailRequest) {
-        try {
-            emailService.sendSimpleEmail(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getText());
-            return "Email sent successfully!";
-        } catch (Exception e) {
-            return "Failed to send email: " + e.getMessage();
+
+
+        @PostMapping("/send")
+        public String sendEmail(@RequestBody EmailRequest emailRequest) {
+            try {
+                if (emailRequest.getJsonContent() != null && !emailRequest.getJsonContent().isEmpty()) {
+                    emailService.sendEmailWithJsonAttachment(
+                            emailRequest.getTo(),
+                            emailRequest.getSubject(),
+                            emailRequest.getText(),
+                            emailRequest.getJsonContent()
+                    );
+                } else {
+                    emailService.sendSimpleEmail(
+                            emailRequest.getTo(),
+                            emailRequest.getSubject(),
+                            emailRequest.getText()
+                    );
+                }
+                return "Email sent successfully!";
+            } catch (Exception e) {
+                return "Failed to send email: " + e.getMessage();
+            }
         }
-    }
 
     static class EmailRequest {
         private String to;
         private String subject;
         private String text;
+        private String jsonContent;
+
 
         // Getters and setters
+        public String getJsonContent() {
+            return jsonContent;
+        }
+
+        public void setJsonContent(String jsonContent) {
+            this.jsonContent = jsonContent;
+        }
         public String getTo() {
             return to;
         }
