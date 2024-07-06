@@ -51,6 +51,7 @@ public class LabResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createLab(@RequestBody @Valid final LabDTO labDTO) {
+        keycloakService.addLab(labDTO);
         final Long createdId = labService.create(labDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }

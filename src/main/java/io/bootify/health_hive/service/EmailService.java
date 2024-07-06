@@ -34,7 +34,7 @@ public class EmailService {
             helper.setText(text);
 
             ByteArrayResource jsonAttachment = new ByteArrayResource(jsonContent.getBytes());
-            helper.addAttachment("data.json", jsonAttachment, "application/json");
+            helper.addAttachment("healthhive_backup.json", jsonAttachment, "application/json");
 
             emailSender.send(message);
         } catch (Exception e) {

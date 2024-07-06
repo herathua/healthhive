@@ -45,34 +45,44 @@ public class KeycloakService {
         Keycloak keycloak = keycloak();
 
         try {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(userDTO.getEmail());
-        user.setFirstName(userDTO.getFullName());
-        user.setEmail(userDTO.getEmail());
-        user.setEnabled(true);
+            UserRepresentation user = new UserRepresentation();
+            user.setUsername(userDTO.getEmail());
+            user.setFirstName(userDTO.getFullName());
+            user.setEmail(userDTO.getEmail());
+            user.setEnabled(true);
 
-        Response response = keycloak.realm(REALM).users().create(user);
-        log.info("Create User Response: {}", response.getStatusInfo().toString());
+            Response response = keycloak.realm(REALM).users().create(user);
+            log.info("Create User Response: {}", response.getStatusInfo().toString());
 
-        if (response.getStatus() != 201) {
-            log.error("Failed to create user: {}", response.getStatusInfo());
-            return null;
+            if (response.getStatus() != 201) {
+                log.error("Failed to create user: {}", response.getStatusInfo());
+                return null;
+            }
+            String userId = CreatedResponseUtil.getCreatedId(response);
+            try {
+
+                System.out.println("User ID: " + userId);
+                UserResource userResource = keycloak.realm(REALM).users().get(userId);
+
+                userResource.executeActionsEmail(Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+
+            } catch (Exception e) {
+                log.error("Failed to send email to user: {}", userDTO.getEmail(), e);
+                throw new RuntimeException("Failed to send email to user", e);
+            }
+            String userGroupId = "11581079-4efe-4f76-9133-5a55bc5a174e";
+
+            try {
+                keycloak.realm(REALM).users().get(userId).joinGroup(userGroupId);
+            }catch (Exception e) {
+                log.error("Failed to add user to group: {}", userGroupId, e);
+            }
+            return String.format("User created successfully: %s", userDTO.getEmail());    }
+        catch (Exception e) {
+            log.error("Failed to create user: {}", userDTO.getEmail(), e);
+            throw new RuntimeException("Failed to create user", e);
         }
-        String userId = CreatedResponseUtil.getCreatedId(response);
-
-        String userGroupId = "11581079-4efe-4f76-9133-5a55bc5a174e";
-
-        try {
-            keycloak.realm(REALM).users().get(userId).joinGroup(userGroupId);
-        }catch (Exception e) {
-            log.error("Failed to add user to group: {}", userGroupId, e);
-        }
-        return String.format("User created successfully: %s", userDTO.getEmail());    }
-    catch (Exception e) {
-        log.error("Failed to create user: {}", userDTO.getEmail(), e);
-        throw new RuntimeException("Failed to create user", e);
-    }
-    finally {
+        finally {
             keycloak.close();
         }
     }
@@ -96,7 +106,17 @@ public class KeycloakService {
 
             String labId = CreatedResponseUtil.getCreatedId(response);
 
+            try {
 
+                System.out.println("User ID: " + labId);
+                UserResource userResource = keycloak.realm(REALM).users().get(labId);
+
+                userResource.executeActionsEmail(Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+
+            } catch (Exception e) {
+                log.error("Failed to send email to user: {}", labDTO.getEmail(), e);
+                throw new RuntimeException("Failed to send email to user", e);
+            }
 
             String labGroupId = "2e3b228c-8c89-4c93-8560-b0bcc453865b";
 

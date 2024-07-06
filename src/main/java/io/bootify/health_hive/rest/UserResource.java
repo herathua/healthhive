@@ -55,7 +55,7 @@ public class UserResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
-//        userService.create(userDTO);
+        userService.create(userDTO);
         keycloakService.addUser(userDTO);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
