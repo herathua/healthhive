@@ -56,7 +56,7 @@ public class FileResource {
 
 
         final Long createdId = fileService.create(fileDTO);
-//        final String txId = stringStorageService.storeString(fileDTO.getFileHash());
+        final String txId = stringStorageService.storeString(fileDTO.getFileHash());
         try{
 //            return null;
             return new ResponseEntity<>(createdId, HttpStatus.CREATED);

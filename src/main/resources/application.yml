@@ -20,7 +20,7 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: false  # Disable STARTTLS since SSL is used
+            enable: false  
             required: false
           ssl:
             enable: true
@@ -31,8 +31,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://lemur-6.cloud-iam.com/auth/realms/teamnova
-          jwk-set-uri: https://lemur-6.cloud-iam.com/auth/realms/teamnova/protocol/openid-connect/certs
+          issuer-uri: https://lemur-1.cloud-iam.com/auth/realms/healthhivelk
+          jwk-set-uri: https://lemur-1.cloud-iam.com/auth/realms/healthhivelk/protocol/openid-connect/certs
 
 
 

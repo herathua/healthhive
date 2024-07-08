@@ -24,7 +24,7 @@ public class StringStorageService {
         BigInteger gasLimit = BigInteger.valueOf(4_300_000); // Custom gas limit
         ContractGasProvider gasProvider = new StaticGasProvider(gasPrice, gasLimit);
 
-        stringStorage = StringStorage.load("0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0", web3j, credentials, gasProvider);
+        stringStorage = StringStorage.load("0x9FBDa871d559710256a2502A2517b794B482Db40", web3j, credentials, gasProvider);
     }
 
     public String storeString(String inputString) throws Exception {

@@ -55,8 +55,9 @@ public class UserResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
-        userService.create(userDTO);
         keycloakService.addUser(userDTO);
+        userService.create(userDTO);
+
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
@@ -76,7 +77,15 @@ public class UserResource {
         if (!keycloakUser) {
             throw new NotFoundException();
         }
-        long id = userRepository.findByEmail(email).getId();
+        long id;
+        try {
+            id = userRepository.findByEmail(email).getId();
+        }
+        catch (Exception e) {
+
+            System.out.println(e.getMessage());
+            throw new NotFoundException();
+        }
         final ReferencedWarning referencedWarning = userService.getReferencedWarning(id);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

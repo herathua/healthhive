@@ -75,14 +75,17 @@ public class LabResource {
         return ResponseEntity.ok(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{email}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Boolean> deleteLab(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<Boolean> deleteLab(@PathVariable(name = "email") final String email) {
+        keycloakService.deleteEntityKeycloak(email);
+        final Long id = labRepository.findAllByEmail(email).getId();
         final ReferencedWarning referencedWarning = labService.getReferencedWarning(id);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);
         }
-        return ResponseEntity.ok(labService.delete(id));
+        labService.delete(id);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
 }
