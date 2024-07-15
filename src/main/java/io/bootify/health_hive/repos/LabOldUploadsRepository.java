@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+
 public interface LabOldUploadsRepository extends JpaRepository<LabOldUploads, Long> {
     @Query("SELECT l FROM LabOldUploads l WHERE l.labid = :labid AND l.dateCreated BETWEEN :startDate AND :endDate")
     List<LabOldUploads> findByLabidAndDateCreatedBetween(
