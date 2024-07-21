@@ -21,14 +21,12 @@ public class DataUploadRequestService {
     private final DataUploadRequestRepository dataUploadRequestRepository;
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
-    private final IPFSService ipfsService;
 
     public DataUploadRequestService(final DataUploadRequestRepository dataUploadRequestRepository,
-                                    final UserRepository userRepository, final FileRepository fileRepository, final IPFSService ipfsService) {
+                                    final UserRepository userRepository, final FileRepository fileRepository) {
         this.dataUploadRequestRepository = dataUploadRequestRepository;
         this.userRepository = userRepository;
         this.fileRepository = fileRepository;
-        this.ipfsService = ipfsService;
     }
 
     public List<DataUploadRequestDTO> findAll() {

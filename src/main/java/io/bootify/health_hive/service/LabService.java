@@ -47,7 +47,6 @@ public class LabService {
     public Long create(final LabDTO labDTO) {
         final Lab lab = new Lab();
         mapToEntity(labDTO, lab);
-//        keycloakService.createLabInKeycloak(labDTO);
 
         return labRepository.save(lab).getId();
     }
@@ -63,9 +62,7 @@ public class LabService {
 
     public Boolean delete(final Long id) {
         labRepository.deleteById(id);
-        LabDTO labDTO = get(id);
-        return  keycloakService.deleteEntityKeycloak(labDTO.getEmail());
-
+        return true;
     }
     public void resetLabPassword(final Long id, final String tempPassword) {
         final Lab lab = labRepository.findById(id)

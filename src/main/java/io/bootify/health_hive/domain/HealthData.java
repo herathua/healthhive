@@ -28,8 +28,7 @@ public class HealthData {
     private String height;
 
 
-    @Column(columnDefinition = "longtext")
-    private String notes;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -75,12 +74,6 @@ public class HealthData {
         this.user = user;
     }
 
-    public String getNotes() {
-        return notes;
-    }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 
 }
