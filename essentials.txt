@@ -28,3 +28,16 @@ Summary
 
 
 smtp password = vlvo oqsw jaau iwuy
+
+KEYCLOAK_URL = "https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/token"
+CLIENT_ID = "Health-Hive-Client"
+# CLIENT_SECRET = "wR9CfQqsolEktMiZlARq5FXDXPcNxJ9a"
+USERNAME = "teamnova.uom@gmail.com"
+PASSWORD = "12345"
+TOKEN_FILE = "./app/tokens/token.txt"
+
+
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://healthhive.cpceyykqk0vx.ap-south-1.rds.amazonaws.com:3306/Health-Hive?serverTimezone=UTC}
+    username: ${JDBC_DATABASE_USERNAME:admin}
+    password: ${JDBC_DATABASE_PASSWORD:health_hiveadmin}

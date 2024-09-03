@@ -20,14 +20,16 @@ import java.util.List;
 @Service
 public class KeycloakService {
 
-    private static final String SERVER_URL = "https://lemur-1.cloud-iam.com/auth";
-    private static final String REALM = "healthhivelk";
+    private static final String SERVER_URL = "https://lemur-14.cloud-iam.com/auth";
+    private static final String REALM = "teamnovauom";
     private static final String CLIENT_ID = "Health-Hive-Client";
-    private static final String ADMIN_USERNAME = "chamikasandun3131@gmail.com";
+    private static final String ADMIN_USERNAME = "teamnova.uom@gmail.com";
     private static final String ADMIN_PASSWORD = "12345";
 
     public static void updateLabInKeycloak(LabDTO labDTO) {
+        System.out.println("Lab updated successfully");
     }
+
 
     private Keycloak keycloak() {
         return KeycloakBuilder.builder()
@@ -79,7 +81,7 @@ public class KeycloakService {
                 log.error("Failed to send email to user: {}", userDTO.getEmail(), e);
                 throw new RuntimeException("Failed to send email to user", e);
             }
-            String userGroupId = "f71a3776-1d05-45fd-8024-c7835488efad";
+            String userGroupId = "25a5e7fe-3eb3-4257-a08c-4200bdaa1f7d";
 
             try {
                 keycloak.realm(REALM).users().get(userId).joinGroup(userGroupId);
@@ -127,7 +129,7 @@ public class KeycloakService {
                 throw new RuntimeException("Failed to send email to user", e);
             }
 
-            String labGroupId = "a9713e8a-6dad-4095-b7a8-5c64e28e0696";
+            String labGroupId = "0803924f-18bb-414a-8aaf-b8c154cc197a";
 
             try {
                 keycloak.realm(REALM).users().get(labId).joinGroup(labGroupId);
@@ -148,10 +150,7 @@ public class KeycloakService {
         }
     }
 
-    private String generateTemporaryPassword(LabDTO labDTO) {
-        String preName = labDTO.getLabName().substring(0, Math.min(labDTO.getLabName().length(), 3));
-        return preName + labDTO.getLabRegID();
-    }
+
 
 
 

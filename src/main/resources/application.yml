@@ -1,10 +1,10 @@
 spring:
-  cors:
-    allowed-origins: "chrome-extension://pfdhoblngboilpfeibdedpjgfnlcodoo"
+
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:mysql://healthhive.cpceyykqk0vx.ap-south-1.rds.amazonaws.com:3306/Health-Hive?serverTimezone=UTC}
-    username: ${JDBC_DATABASE_USERNAME:admin}
-    password: ${JDBC_DATABASE_PASSWORD:health_hiveadmin}
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3307/Health-Hive}
+    username: ${JDBC_DATABASE_USERNAME:root}
+    password: ${JDBC_DATABASE_PASSWORD:Password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
     dbcp2:
       max-wait-millis: 30000
       validation-query: /* ping */ select 1
@@ -27,12 +27,12 @@ spring:
         debug: true
 
   #   security
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://lemur-1.cloud-iam.com/auth/realms/healthhivelk
-          jwk-set-uri: https://lemur-1.cloud-iam.com/auth/realms/healthhivelk/protocol/openid-connect/certs
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: https://lemur-14.cloud-iam.com/auth/realms/teamnovauom
+#          jwk-set-uri: https://lemur-14.cloud-iam.com/auth/realms/teamnovauom/protocol/openid-connect/certs
 
 
 
@@ -52,13 +52,17 @@ spring:
 #    compose:
 #      lifecycle-management: start-only
 
-jwt:
-  auth:
-    converter:
-      resource-id : Health-Hive-Client
-      principal-attribute: principal_username
+#jwt:
+#  auth:
+#    converter:
+#      resource-id : Health-Hive-Client
+#      principal-attribute: principal_username
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "prometheus" ]
 
 logging:
   level:

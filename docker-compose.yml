@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-#  mysql-hh:
-#    container_name: mysql-hh
-#    image: mysql
-#    environment:
-#      - MYSQL_DATABASE=Health-Hive
-#      - MYSQL_ROOT_PASSWORD=Password
-#    ports:
-#      - 3307:3306
-#    volumes:
-#      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
-#      - mysql_data:/var/lib/mysql
+  mysql-hh:
+    container_name: mysql-hh
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=Health-Hive
+      - MYSQL_ROOT_PASSWORD=Password
+    ports:
+      - 3307:3306
+    volumes:
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
+      - mysql_data:/var/lib/mysql
 
 
 #  keycloak-hh:t
@@ -47,20 +47,19 @@ services:
 #    depends_on:
 #      - mysql-hh
 
-#  prometheus:
-#    image: prom/prometheus
-#    extra_hosts: [ 'host.docker.internal:host-gateway' ]
-#    command:
-#      - --enable-feature=exemplar-storage
-#      - --config.file=/etc/prometheus/prometheus.yml
-#    volumes:
-#      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-#      - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
-#    ports:
-#      - "9090:9090"
-#    depends_on:
-#      - mysql-hp-exporter
-#      - keycloak-hh
+  prometheus:
+    image: prom/prometheus
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    command:
+      - --enable-feature=exemplar-storage
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/prometheus/rule.yml:/etc/prometheus/rule.yml:ro
+      - token_volume:/app/tokens
+    ports:
+      - "9090:9090"
+
 
 
 
@@ -78,6 +77,14 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3001:3000"
+
+  token_retrieval:
+    build:
+      context: .
+      dockerfile: Dockerfile_token_retrieval
+    volumes:
+      - ./token_retrieval_script.py:/app/token_retrieval_script.py
+      - token_volume:/app/tokens
 
 #  ipfs0:
 #    container_name: ipfs0
@@ -118,5 +125,7 @@ services:
 
 volumes:
   mysql_data:
+  token_volume:
+    driver: local
 
 
