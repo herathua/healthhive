@@ -1,0 +1,44 @@
+global:
+  scrape_interval: 60s
+  evaluation_interval: 60s
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - "rule.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alert-manager:9093
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:9090']
+
+#  - job_name: 'health_hive'
+#    metrics_path: '/actuator/prometheus'
+#    static_configs:
+#      - targets: [ 'localhost:33000' ]
+#    bearer_token_file: /app/tokens/token.txt
+
+  - job_name: 'HealthHive'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+        - targets: [ 'host.docker.internal:33000' ]
+          labels:
+            application: 'Health Hive Backend'
+
+  - job_name: 'keycloak'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['keycloak-hh:8080']
+
+  - job_name: 'mysql'
+    static_configs:
+      - targets: ['mysql-hp-exporter:9104'] # Replace 'mysql_host' with your MySQL container hostname/IP
+
+
+#this is just
